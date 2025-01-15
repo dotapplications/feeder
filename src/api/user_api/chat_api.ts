@@ -8,6 +8,7 @@ import { JsonSessionStore } from "../../json_store";
 import { devLocalRetrieverRef } from "@genkit-ai/dev-local-vectorstore";
 import { retrivePersonalityMemory } from "../../memory/peronality_memory";
 import { retriveAllMemoriesContext } from "../settings_api/memory_invocation_tools";
+import { retriveEntityMemory } from "../../memory/entity_memory";
 
 const userRouter = express.Router();
 
@@ -44,7 +45,14 @@ userRouter.post("/chat/:sessionId/message", async (req, res) => {
   const { message } = req.body;
 
   try {
-    const memory = await retriveAllMemoriesContext(message);
+    // const memory = await retriveAllMemoriesContext(message);
+
+    const personalityMemory = await retrivePersonalityMemory(
+      "A person is asking question, you need to answer according to your personality"
+    );
+    const entityMemory = await retriveEntityMemory(
+      `Gather knowledge about ${message}`
+    );
 
     const feeder_terminal = ai.definePrompt(
       {
@@ -77,9 +85,12 @@ userRouter.post("/chat/:sessionId/message", async (req, res) => {
 
     try {
       const { response, stream } = await chat.sendStream(
-        `context:${JSON.stringify(
-          memory
-        )} consider above context to answer the below question, question: \n ${message}`
+        `Answer the question: \n ${message}\n
+      use the below information\n
+      ${JSON.stringify(entityMemory)}\n
+
+      talk like: ${JSON.stringify(personalityMemory)}\n
+      `
       );
 
       // Using the streaming API
