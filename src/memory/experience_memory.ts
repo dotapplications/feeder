@@ -22,15 +22,19 @@ export const index_experience = ai.defineFlow(
   }
 );
 export const indexExperienceMemory = async (content: string) => {
-  const chunks = await run("chunk-it", async () =>
-    chunk(content, chunkingConfig)
-  );
+  try {
+    const chunks = await run("chunk-it", async () =>
+      chunk(content, chunkingConfig)
+    );
 
-  // Convert chunks of text into documents to store in the index.
-  const documents = chunks.map((text) => {
-    return Document.fromText(text, { content });
-  });
-  await ai.index({ indexer: experience_indexer, documents });
+    // Convert chunks of text into documents to store in the index.
+    const documents = chunks.map((text) => {
+      return Document.fromText(text, { content });
+    });
+    await ai.index({ indexer: experience_indexer, documents });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const retriveExperienceMemory = async (

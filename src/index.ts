@@ -60,6 +60,8 @@ import { createDailyObjective } from "./api/agent_api/create_daily_objectives";
 import { createTasksFromObjectives } from "./api/agent_api/create_tasks_from_objectives_agent";
 import {
   craftingTweetAboutToken,
+  createNewsHealines,
+  createQuestion,
   performLearning,
   performLearningAboutToken,
   scheduleJobs,
@@ -269,50 +271,51 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+// createNewsHealines();
 
 app.listen(3333, () => {
   console.log("Server is running on port 3333");
 });
 // tryRetweet();
 
-const reservationTool = ai.defineTool(
-  {
-    name: "reservationTool",
-    description: "use this tool to try to book a reservation",
-    inputSchema: z.object({
-      partySize: z.coerce.number().describe("the number of guests"),
-      date: z.string().describe("the date to book for"),
-    }),
-    outputSchema: z
-      .string()
-      .describe(
-        "true if the reservation was successfully booked and false if there's" +
-          " no table available for the requested time"
-      ),
-  },
-  async (input) => {
-    console.log(input);
-    await input.date;
+// const reservationTool = ai.defineTool(
+//   {
+//     name: "reservationTool",
+//     description: "use this tool to try to book a reservation",
+//     inputSchema: z.object({
+//       partySize: z.coerce.number().describe("the number of guests"),
+//       date: z.string().describe("the date to book for"),
+//     }),
+//     outputSchema: z
+//       .string()
+//       .describe(
+//         "true if the reservation was successfully booked and false if there's" +
+//           " no table available for the requested time"
+//       ),
+//   },
+//   async (input) => {
+//     console.log(input);
+//     await input.date;
 
-    return "true";
-  }
-);
+//     return "true";
+//   }
+// );
 
-const chat = ai.chat({
-  system:
-    "You are an AI customer service agent for Pavel's Cafe. Use the tools " +
-    "available to you to help the customer. If you cannot help the " +
-    "customer with the available tools, politely explain so.",
-  tools: [reservationTool],
-});
+// const chat = ai.chat({
+//   system:
+//     "You are an AI customer service agent for Pavel's Cafe. Use the tools " +
+//     "available to you to help the customer. If you cannot help the " +
+//     "customer with the available tools, politely explain so.",
+//   tools: [reservationTool],
+// });
 
-const callReservation = async () => {
-  const response = await chat.send(
-    "I'd like to make a reservation for 5 people on December 25th."
-  );
+// const callReservation = async () => {
+//   const response = await chat.send(
+//     "I'd like to make a reservation for 5 people on December 25th."
+//   );
 
-  console.log(response.text);
-};
+//   console.log(response.text);
+// };
 
 // callReservation();
 

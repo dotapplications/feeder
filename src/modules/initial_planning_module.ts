@@ -14,6 +14,8 @@ import {
   twitter_schema,
 } from "../schemas/twitter_schema";
 import { handleAgentResponse } from "./response_modules";
+import { GenerateResponse, z } from "genkit";
+import { headline_schema } from "../schemas/headline_schema";
 
 export const performLearning = async () => {
   await loginTwitter();
@@ -40,6 +42,64 @@ export const performLearning = async () => {
   // Helper function to add delay
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Process tokens with a delay
+
+  // Process tokens with a delay
+  for (const token of response.output.tokens_to_track) {
+    await performLearningAboutToken(token.token_symbol);
+    await delay(60000); // 1 minute delay
+  }
+
+  // Process topics with a delay
+  for (const topic of response.output.topics_to_track) {
+    await performTwitterSearch(topic.topic);
+    await delay(60000); // 1 minute delay
+  }
+
+  // Process narratives with a delay
+  for (const narrative of response.output.narratives_to_track) {
+    await performTwitterSearch(narrative.narrative);
+    await delay(60000); // 1 minute delay
+  }
+};
+
+export const performLearningAndTweet = async () => {
+  await loginTwitter();
+  const twitterFeedData = await readTwitterHomeTimeline();
+  const systemPrompt =
+    "You are an autonomous agent named Feeder, you will be reading twitter feeds below and generate output based on the information you have read";
+  const prompt = `${twitterFeedData}`;
+  const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
+  var docs = await retriveAllMemoriesContext(complete_prompt);
+
+  var response = await ai.generate({
+    docs: docs,
+    system: systemPrompt,
+    prompt: prompt,
+    output: {
+      schema: twitter_schema,
+    },
+  });
+
+  console.log("Response from agent", response);
+
+  await handleAgentResponse(response);
+
+  // Helper function to add delay
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  await createQuestion(twitterFeedData);
+  await delay(60000); // 1 minute delay
+
+  await createNewsHealines(twitterFeedData);
+  await delay(60000); // 1 minute delay
+
+  await craftingTweetAboutToken(twitterFeedData);
+  await delay(60000); // 1 minute delay
+
+  // Process tokens with a delay
 
   // Process tokens with a delay
   for (const token of response.output.tokens_to_track) {
@@ -102,14 +162,17 @@ export const performTwitterSearch = async (topic: string) => {
   await handleAgentResponse(response);
 };
 
-export const craftingTweetAboutToken = async () => {
+export const craftingTweetAboutToken = async (tweets: string) => {
   const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting a tweet about an token you have searched for very recently and you found interesting, you can also add your own thoughts about the token and why you found it, include the deails of the tokens, like any news, or trading related metrics  you found. use $ with token symbol to search for the token`;
 
-  var docs = await retriveAllMemoriesContext(systemPrompt);
+  const prompt = `also use the below tweets to craft the tweet\n ${tweets}`;
+
+  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
     docs: docs,
-    prompt: systemPrompt,
+    system: systemPrompt,
+    prompt: prompt,
     output: {
       schema: tweet_schema,
     },
@@ -153,8 +216,47 @@ export const craftingTweetAboutAnTopic = async () => {
   await handleAgentResponse(response);
 };
 
+export const createNewsHealines = async (feedData: string) => {
+  const system = `You are an autonmous agent named Feeder, you will be creating news headlines based tweets below, and also include your knowledge and memory.`;
+
+  const docs = await retriveAllMemoriesContext(system);
+
+  const response = await ai.generate({
+    docs: docs,
+    prompt: system,
+    output: {
+      schema: headline_schema,
+    },
+  });
+
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
+};
+
+export const createQuestion = async (twitterData: string) => {
+  const system = `You are an autonmous agent named Feeder, you will be drafting questions based on the below tweets info, and also include your knowledge and memory, so that people can ask you about it`;
+
+  const docs = await retriveAllMemoriesContext(system);
+
+  const response = await ai.generate({
+    docs: docs,
+    system: system,
+    prompt: twitterData,
+    output: {
+      schema: z.object({
+        question: z.string().describe(" less than 100 characters"),
+      }),
+    },
+  });
+
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
+
+  return response.output.question;
+};
+
 export const scheduleJobs = async () => {
-  cron.schedule("*/30 * * * *", async () => {
+  cron.schedule("0 */1 * * *", async () => {
     console.log("Starting performLearning job...");
     try {
       await performLearning();
@@ -165,10 +267,10 @@ export const scheduleJobs = async () => {
   });
 
   // Schedule craftingTweetAboutToken every 2 hours
-  cron.schedule("0 */1 * * *", async () => {
+  cron.schedule("15 */1 * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
-      await craftingTweetAboutToken();
+      await performLearningAndTweet();
       console.log("craftingTweetAboutToken job completed successfully.");
     } catch (error) {
       console.error("Error in craftingTweetAboutToken job:", error);

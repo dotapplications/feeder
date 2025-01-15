@@ -10,6 +10,8 @@ import { indexReflectionsMemory } from "../memory/reflections_memory";
 import { followUser } from "../api/user_api/twitter-eliza";
 import { retweetTweet } from "../api/user_api/twitter-eliza";
 import { likeTweet } from "../api/user_api/twitter-eliza";
+import { createQuestion } from "./initial_planning_module";
+import { storeQuestionIntoDB } from "../api/user_api/questions_firebase";
 
 interface TokenToTrack {
   token_symbol: string;
@@ -33,6 +35,7 @@ interface ResponseData {
     topic: string;
     details: string;
   }[];
+  question?: string;
   token_tracked?: TokenToTrack;
   narrative_tracked?: NarrativeToTrack;
   topic_tracked?: TopicToTrack;
@@ -189,6 +192,12 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
               console.log(reflections);
               // Save reflections to memory
               await indexReflectionsMemory(reflections);
+              break;
+            case "question":
+              // Handle question
+              console.log("Creating question:", output[key]);
+
+              storeQuestionIntoDB(output[key]);
               break;
             case "tweet_id_to_retweet":
               // Handle tweet id to retweet
