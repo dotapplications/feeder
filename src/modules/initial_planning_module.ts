@@ -163,9 +163,9 @@ export const performTwitterSearch = async (topic: string) => {
 };
 
 export const craftingTweetAboutToken = async (tweets: string) => {
-  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting a tweet about an token you have searched for very recently and you found interesting, you can also add your own thoughts about the token and why you found it, include the deails of the tokens, like any news, or trading related metrics  you found. use $ with token symbol to search for the token`;
+  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting a tweet about an token you found in the below tweets (recomended) or from your knowledge and also find some more info about the token from your knowledge, you can also add your own thoughts about the token and why you found it, include the deails of the tokens, like any news, or trading related metrics  you found. use $ with token symbol to search for the token`;
 
-  const prompt = `also use the below tweets to craft the tweet\n ${tweets}`;
+  const prompt = `tweets\n ${tweets}`;
 
   var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
