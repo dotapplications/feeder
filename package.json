@@ -1,0 +1,46 @@
+{
+  "name": "feeder-genkit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx tsx --watch src/index.ts",
+    "genkit": "GOOGLE_GENAI_API_KEY=AIzaSyA0nnPK11pJKS5myavpEieLnDooDpC4PJM npx genkit start -- npx tsx --watch src/index.ts",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/app": "^0.10.17",
+    "@firebase/auth": "^1.8.1",
+    "@firebase/firestore": "^4.7.5",
+    "@genkit-ai/dev-local-vectorstore": "^0.9.12",
+    "@genkit-ai/firebase": "^0.9.12",
+    "@genkit-ai/googleai": "^0.9.12",
+    "@genkit-ai/vertexai": "^0.9.12",
+    "agent-twitter-client": "^0.0.18",
+    "chromadb": "^1.10.0",
+    "chromadb-default-embed": "^2.13.2",
+    "dotenv": "^16.4.7",
+    "firebase": "^11.1.0",
+    "firebase-admin": "^13.0.2",
+    "genkit": "^0.9.12",
+    "genkitx-chromadb": "^0.9.12",
+    "llm-chunk": "^0.0.1",
+    "node-cron": "^3.0.3",
+    "nodemon": "^3.1.9",
+    "pdf-parse": "^1.1.1",
+    "tough-cookie": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/node-cron": "^3.0.11",
+    "@types/pdf-parse": "^1.1.4",
+    "genkit-cli": "^0.9.12",
+    "typescript": "^5.7.2"
+  }
+}
