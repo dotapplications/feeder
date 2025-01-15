@@ -188,7 +188,7 @@ export const createTweetAPI = async (tweet: string) => {
 
 export const readTwitterHomeTimeline = async () => {
   // Assume `tweets` is the data you provided
-  const tweets = await scraper.fetchHomeTimeline(30, []);
+  const tweets = await scraper.fetchHomeTimeline(50, []);
 
   var responseTweets: any[] = [];
 
