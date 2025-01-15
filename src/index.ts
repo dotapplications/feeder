@@ -64,6 +64,7 @@ import {
   createQuestion,
   performLearning,
   performLearningAboutToken,
+  performLearningAndTweet,
   scheduleJobs,
 } from "./modules/initial_planning_module";
 
@@ -270,7 +271,8 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-scheduleJobs();
+// scheduleJobs();
+performLearningAndTweet();
 // createNewsHealines();
 
 app.listen(3333, () => {

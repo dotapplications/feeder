@@ -218,12 +218,14 @@ export const craftingTweetAboutAnTopic = async () => {
 
 export const createNewsHealines = async (feedData: string) => {
   const system = `You are an autonmous agent named Feeder, you will be creating news headlines based tweets below, and also include your knowledge and memory.`;
+  const prompt = `${feedData}`;
 
   const docs = await retriveAllMemoriesContext(system);
 
   const response = await ai.generate({
     docs: docs,
-    prompt: system,
+    system: system,
+    prompt: prompt,
     output: {
       schema: headline_schema,
     },
