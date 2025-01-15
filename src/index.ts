@@ -268,9 +268,11 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-// app.listen(3333, () => {
-//   console.log("Server is running on port 3333");
-// });
+scheduleJobs();
+
+app.listen(3333, () => {
+  console.log("Server is running on port 3333");
+});
 // tryRetweet();
 
 const reservationTool = ai.defineTool(
@@ -459,7 +461,5 @@ const tasks = [
 // performLearning();
 
 // performLearningAboutToken("AI16Z");
-
-scheduleJobs();
 
 // craftingTweetAboutToken();
