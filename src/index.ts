@@ -271,8 +271,8 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-scheduleJobs();
-// performLearningAndTweet();
+// scheduleJobs();
+performLearningAndTweet();
 // createNewsHealines();
 
 app.listen(3333, () => {
