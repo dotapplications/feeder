@@ -189,6 +189,14 @@ export const createTweetAPI = async (tweet: string) => {
   }
 };
 
+export const sentLongTweet = async (tweet: string) => {
+  try {
+    await scraper.sendLongTweet(tweet);
+  } catch (e) {
+    console.error("Error sending tweet:", e);
+  }
+};
+
 export const readTwitterHomeTimeline = async () => {
   // Assume `tweets` is the data you provided
   const tweets = await scraper.fetchHomeTimeline(50, []);
@@ -271,12 +279,13 @@ export const followUser = async (username: string) => {
 };
 
 export const searchGrokAboutToken = async (name: string) => {
+  await loginTwitter();
   console.log("searching grok for token", name);
   const grokResponse = await scraper.grokChat({
     messages: [
       {
         role: "user",
-        content: `Fetch all the details regarding ${name} Token and all the recent information about the token. Include maximum information.`,
+        content: `give me an detailed tweet by fetching all the details regarding ${name}  Token and all the recent information about the token. Include maximum information.`,
       },
     ],
   });

@@ -5,7 +5,7 @@ import { indexExperienceMemory } from "../memory/experience_memory";
 import { addTradingFeed } from "../api/user_api/trading_feeds";
 import { indexPersonalityMemory } from "../memory/peronality_memory";
 import { indexEntityMemory } from "../memory/entity_memory";
-import { createTweetAPI } from "../api/user_api/twitter-eliza";
+import { createTweetAPI, sentLongTweet } from "../api/user_api/twitter-eliza";
 import { indexReflectionsMemory } from "../memory/reflections_memory";
 import { followUser } from "../api/user_api/twitter-eliza";
 import { retweetTweet } from "../api/user_api/twitter-eliza";
@@ -84,7 +84,7 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
               // Handle tweet
               console.log("Creating tweet:", output[key]);
               const tweet_thread = `${output[key]}`;
-              await createTweetAPI(tweet_thread);
+              await sentLongTweet(tweet_thread);
 
               break;
             case "tweet":

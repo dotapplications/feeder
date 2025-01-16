@@ -277,13 +277,13 @@ const chat_with_feeder_terminal = async () => {
 
 scheduleJobs();
 
-// craftTweetUsingGrok("$SPY");
+// craftTweetUsingGrok("ROSS");
 // performLearningAndTweet();
 // createReflectionsAPI();
 // giveReplyToTweet();
 // createNewsHealines();
 
-app.listen(3333, async() => {
+app.listen(3333, async () => {
   console.log("Server is running on port 3333");
 });
 // tryRetweet();
@@ -476,4 +476,3 @@ const tasks = [
 // performLearningAboutToken("AI16Z");
 
 // craftingTweetAboutToken();
-
