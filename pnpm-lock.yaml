@@ -38,6 +38,9 @@ dependencies:
   dotenv:
     specifier: ^16.4.7
     version: 16.4.7
+  express:
+    specifier: ^4.21.2
+    version: 4.21.2
   firebase:
     specifier: ^11.1.0
     version: 11.1.0
@@ -5881,7 +5884,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/elizaOS/agent-twitter-client/tar.gz/be09d19df20b7ccbe0812eae0485593c5c9a455f}
     name: agent-twitter-client
     version: 0.0.18
-    prepare: true
     requiresBuild: true
     dependencies:
       '@roamhq/wrtc': 0.8.0

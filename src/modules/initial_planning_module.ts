@@ -22,6 +22,7 @@ import { headline_schema } from "../schemas/headline_schema";
 import { retriveEntityMemory } from "../memory/entity_memory";
 import { retrivePersonalityMemory } from "../memory/peronality_memory";
 import { retriveExperienceMemory } from "../memory/experience_memory";
+import { getTokenArray, setTokenArray } from "../api/user_api/tweet_tokens";
 
 export const performLearning = async () => {
   await loginTwitter();
@@ -154,6 +155,16 @@ export const performLearningAndTweet = async () => {
   // Helper function to add delay
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+
+  var tokenArray = await getTokenArray();
+
+  response.output.tokens_to_track.forEach((token) => {
+    if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
+      tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
+    }
+  });
+
+  await setTokenArray(tokenArray);
 
   // await createQuestion(twitterFeedData);
   // await delay(60000); // 1 minute delay
@@ -387,4 +398,28 @@ export const scheduleJobs = async () => {
   //     console.error("Error in craftingTweetAboutAnTopic job:", error);
   //   }
   // });
+
+  //schedular for every 30 mins that will tweet about token
+  cron.schedule("0 */30 * * *", async () => {
+    console.log("Starting craftingTweetAboutToken job...");
+    try {
+      var tokenArray = await getTokenArray();
+      const contextToken = tokenArray.tokensToTweet[0];
+      if (contextToken) {
+        // remove tweeted token from tokensToTweet and add to tweetedTokens if it does not exist (make everything lowercase)
+
+        await craftingTweetAboutToken(contextToken);
+        if (tokenArray.tokensToTweet.includes(contextToken.toLowerCase())) {
+          tokenArray.tokensToTweet = tokenArray.tokensToTweet.filter(
+            (token: string) => token !== contextToken.toLowerCase()
+          );
+          tokenArray.tweetedTokens.push(contextToken.toLowerCase());
+        }
+        await setTokenArray(tokenArray);
+        console.log("craftingTweetAboutToken job completed successfully.");
+      }
+    } catch (error) {
+      console.error("Error in craftingTweetAboutToken job:", error);
+    }
+  });
 };
