@@ -182,8 +182,11 @@ export const searchAboutaTokenAPI = async (symbol: string) => {
 
 export const createTweetAPI = async (tweet: string) => {
   await loginTwitter();
-
-  const response = await scraper.sendTweet(tweet);
+  try {
+    await scraper.sendTweet(tweet);
+  } catch (e) {
+    console.error("Error sending tweet:", e);
+  }
 };
 
 export const readTwitterHomeTimeline = async () => {

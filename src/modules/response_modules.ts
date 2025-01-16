@@ -37,6 +37,7 @@ interface ResponseData {
   }[];
   question?: string;
   token_tracked?: TokenToTrack;
+  tweet_thread?: string;
   narrative_tracked?: NarrativeToTrack;
   topic_tracked?: TopicToTrack;
   tokens_to_track?: TokenToTrack[];
@@ -79,6 +80,13 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
               }
               break;
 
+            case "tweet_thread":
+              // Handle tweet
+              console.log("Creating tweet:", output[key]);
+              const tweet_thread = `${output[key]}`;
+              await createTweetAPI(tweet_thread);
+
+              break;
             case "tweet":
               // Handle tweet
               console.log("Creating tweet:", output[key]);

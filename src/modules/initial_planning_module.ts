@@ -5,6 +5,7 @@ import {
   loginTwitter,
   readTwitterHomeTimeline,
   searchAboutaTokenAPI,
+  searchGrokAboutToken,
   searchTwitterAPI,
 } from "../api/user_api/twitter-eliza";
 import {
@@ -149,8 +150,6 @@ export const performLearningAndTweet = async () => {
 
   console.log("Response from agent", response);
 
-  await handleAgentResponse(response);
-
   // Helper function to add delay
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -265,6 +264,92 @@ export const craftingTweetAboutToken = async (tweets: string) => {
     },
   });
 
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
+};
+
+export const craftTweetUsingGrok = async (tokenSymbol: string) => {
+  // const details = searchGrokAboutToken(tokenSymbol);
+
+  const systemPrompt = `formate below, don't use hashtags hashtags, include emojis and stickers, Consider your personaliy`;
+  var docs = await retrivePersonalityMemory(systemPrompt);
+
+  var prompt = `
+  Here's a detailed tweet about the $SNEK Token, including all the recent information available:
+
+$SNEK Token Overview 📊📷
+
+$SNEK is more than just a memecoin; it's a cultural phenomenon on the Cardano blockchain, designed to unite communities and push the boundaries of what memecoins can achieve. Here are the latest details:
+
+📷Tokenomics:
+Total Supply: 76,715,880,000 SNEK
+Circulating Supply: Approximately 74.36 Billion SNEK
+Current Price: $0.006463 USD (as of recent update)
+Market Cap: $480,830,356 USD
+24h Trading Volume: $3,261,757 USD (last known)
+
+📷 Distribution:
+50% to presale participants
+40% for initial liquidity on Minswap
+5% for partnerships and project development
+3% for crypto exchange listings
+2% for community airdrops
+No tokens were allocated to the team, emphasizing a community-driven approach.
+
+📷 Recent Developments:
+Trading Volume: SNEK has been one of the most traded tokens on Cardano, with significant activity on Minswap, where SNEK/ADA pair holds substantial liquidity.
+Price Movement: It experienced a 7.10% increase in the last 7 days, underperforming the general crypto market and similar meme tokens but still showing growth.
+Burn Mechanism: SNEK implements a deflationary model with 80% of various revenue streams dedicated to burning tokens, reducing total supply over time.
+
+📷 Exchanges:
+Available on centralized exchanges like Gate.io, Bitget, MEXC, and decentralized platforms like Minswap and SundaeSwap.
+
+📷 Community and Utility:
+Strong community engagement with initiatives like Snekboard.com tracking buys and providing holder leaderboards.
+SNEK has ventured into the physical world with SNEK ENERGY drinks, enhancing brand visibility.
+Staking options through Snekies.com, where participants can stake NFTs to earn $SNEK rewards.
+
+📷 Cultural Impact:
+Known for its light-hearted, community-centric approach, SNEK has become a symbol of fun and innovation in the Cardano ecosystem, aiming to bridge web3 onboarding.
+
+📷 Future Plans:
+Continued focus on community-led projects via the Snek Ecosystem Fund.
+Expansion into new markets for SNEK ENERGY, alongside ongoing token burns to manage supply.
+
+📷 Latest News:
+SNEK has been in the news for its high trading volumes, community events, and the introduction of new staking mechanisms.
+
+For those interested in diving deeper, check out:
+CoinGecko for live price charts and market data.📷
+
+CoinMarketCap for comprehensive market cap and trading volume insights.📷
+
+Snek's official site for more on the community and project vision.📷
+
+
+#SNEK #Cardano #MemeCoin #Crypto #Staking #SNEKENERGY
+
+Note: This tweet would be too long for actual Twitter post limits, so in reality, you would need to split this information into multiple tweets or use a thread format to convey all this information.
+  `;
+
+  // const prompt = `tweets\n ${tweets}`;
+
+  console.log(
+    "Reflections memory",
+    docs.map((item) => item.text)
+  );
+  var response = await ai.generate({
+    system: systemPrompt,
+    prompt: prompt,
+    docs,
+    output: {
+      schema: z.object({
+        tweet_thread: z
+          .string()
+          .describe("Include imoji and stickers, don't include hashtags"),
+      }),
+    },
+  });
   console.log("Response from agent", response.output);
   await handleAgentResponse(response);
 };

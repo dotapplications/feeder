@@ -112,7 +112,7 @@ export const retrivePersonalityMemory = async (
   const personalityDoc = await ai.retrieve({
     retriever: personality_memory_retriver,
     query: user_input,
-    options: { k: 3 },
+    options: { k: 2 },
   });
 
   return personalityDoc;

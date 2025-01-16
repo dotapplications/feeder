@@ -59,6 +59,7 @@ import {
 import { createDailyObjective } from "./api/agent_api/create_daily_objectives";
 import { createTasksFromObjectives } from "./api/agent_api/create_tasks_from_objectives_agent";
 import {
+  craftTweetUsingGrok,
   craftingTweetAboutToken,
   createNewsHealines,
   createQuestion,
@@ -274,6 +275,8 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+
+// craftTweetUsingGrok("$SPY");
 // performLearningAndTweet();
 // createReflectionsAPI();
 // giveReplyToTweet();
