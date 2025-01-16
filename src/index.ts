@@ -70,6 +70,7 @@ import {
   performLearningAndTweet,
   scheduleJobs,
 } from "./modules/initial_planning_module";
+import { getTokenArray, setTokenArray } from "./api/user_api/tweet_tokens";
 
 const app = express();
 
@@ -282,7 +283,7 @@ scheduleJobs();
 // giveReplyToTweet();
 // createNewsHealines();
 
-app.listen(3333, () => {
+app.listen(3333, async() => {
   console.log("Server is running on port 3333");
 });
 // tryRetweet();
@@ -475,3 +476,4 @@ const tasks = [
 // performLearningAboutToken("AI16Z");
 
 // craftingTweetAboutToken();
+
