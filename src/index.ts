@@ -272,7 +272,7 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 // scheduleJobs();
-performLearningAndTweet();
+// performLearningAndTweet();
 // createNewsHealines();
 
 app.listen(3333, () => {
