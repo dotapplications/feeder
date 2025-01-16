@@ -266,3 +266,18 @@ export const followUser = async (username: string) => {
 
   console.log(response);
 };
+
+export const searchGrokAboutToken = async (name: string) => {
+  console.log("searching grok for token", name);
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `Fetch all the details regarding ${name} Token and all the recent information about the token. Include maximum information.`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
