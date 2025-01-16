@@ -5,7 +5,13 @@ import { ai } from "../genkit_init";
 import { run } from "../taskRunner";
 import { Document } from "genkit/retriever";
 import { z } from "genkit";
-import { experience_indexer, reflections_memory_retriver } from "./init_memory";
+import {
+  entity_memory_retriver,
+  experience_indexer,
+  experience_memory_retriver,
+  personality_memory_retriver,
+  reflections_memory_retriver,
+} from "./init_memory";
 import { chunkingConfig } from "../utils";
 
 export const index_experience = ai.defineFlow(
@@ -41,9 +47,9 @@ export const retriveExperienceMemory = async (
   user_input: string
 ): Promise<Document[]> => {
   const reflectionsDoc = await ai.retrieve({
-    retriever: reflections_memory_retriver,
+    retriever: entity_memory_retriver,
     query: user_input,
-    options: { k: 3 },
+    options: { k: 9 },
   });
 
   return reflectionsDoc;

@@ -21,6 +21,7 @@ import { GenerateResponse, z } from "genkit";
 import { headline_schema } from "../schemas/headline_schema";
 import { retriveEntityMemory } from "../memory/entity_memory";
 import { retrivePersonalityMemory } from "../memory/peronality_memory";
+import { retriveExperienceMemory } from "../memory/experience_memory";
 
 export const performLearning = async () => {
   await loginTwitter();
@@ -101,6 +102,33 @@ export const replayToAnTweet = async (tweetId: string, tweet: string) => {
   await handleAgentResponse(response);
 };
 
+export const createReflectionsAPI = async () => {
+  const system = `Need to know what are the new informations about token $LLM`;
+  const reflectionsMemory = await retriveExperienceMemory(system);
+
+  console.log(
+    "Reflections memory",
+    reflectionsMemory.map((item) => item.text)
+  );
+
+  const prompt = `Observations and activity summaries context: ${JSON.stringify(
+    reflectionsMemory
+  )}`;
+
+  // const response = await ai.generate({
+  //   system: system,
+  //   prompt: prompt,
+  //   output: {
+  //     schema: z.object({
+  //       reflections: z.string().describe(""),
+  //     }),
+  //   },
+  // });
+
+  // console.log("Response from agent", response.output);
+  // await handleAgentResponse(response);
+};
+
 export const performLearningAndTweet = async () => {
   await loginTwitter();
   const twitterFeedData = await readTwitterHomeTimeline();
@@ -127,11 +155,11 @@ export const performLearningAndTweet = async () => {
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  await createQuestion(twitterFeedData);
-  await delay(60000); // 1 minute delay
+  // await createQuestion(twitterFeedData);
+  // await delay(60000); // 1 minute delay
 
-  await createNewsHealines(twitterFeedData);
-  await delay(60000); // 1 minute delay
+  // await createNewsHealines(twitterFeedData);
+  // await delay(60000); // 1 minute delay
 
   await craftingTweetAboutToken(twitterFeedData);
   await delay(60000); // 1 minute delay
@@ -155,6 +183,28 @@ export const performLearningAndTweet = async () => {
     await performTwitterSearch(narrative.narrative);
     await delay(60000); // 1 minute delay
   }
+};
+
+export const giveReplyToTweet = async () => {
+  var systemPrompt = `feeder crafted an tweet: Spotted $LLM generating buzz! 🚀 Some see moon potential, others caution.  It's showing up alongside major players like $BTC and $ETH.  DYOR before investing!, and got an reply: if only every buzz was a guarantee! what’s next, time travel investments?, need to give an reply `;
+
+  const entityDoc = await retriveEntityMemory(systemPrompt);
+
+  const personalityDoc = await getPersonalityMemory(systemPrompt);
+
+  var response = await ai.generate({
+    system: systemPrompt,
+    prompt: `Use the following knowledge context to reply context:${JSON.stringify(
+      entityDoc
+    )} and use use personality context: ${JSON.stringify(personalityDoc)}`,
+    output: {
+      schema: z.object({
+        reply: z.string().describe("less than 280 characters"),
+      }),
+    },
+  });
+
+  console.log("Response from agent", response.output);
 };
 
 export const performLearningAboutToken = async (tokenSymbol: string) => {
@@ -295,18 +345,18 @@ export const createQuestion = async (twitterData: string) => {
 };
 
 export const scheduleJobs = async () => {
-  cron.schedule("0 */1 * * *", async () => {
-    console.log("Starting performLearning job...");
-    try {
-      await performLearning();
-      console.log("performLearning job completed successfully.");
-    } catch (error) {
-      console.error("Error in performLearning job:", error);
-    }
-  });
+  // cron.schedule("0 */1 * * *", async () => {
+  //   console.log("Starting performLearning job...");
+  //   try {
+  //     await performLearning();
+  //     console.log("performLearning job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in performLearning job:", error);
+  //   }
+  // });
 
   // Schedule craftingTweetAboutToken every 2 hours
-  cron.schedule("15 */1 * * *", async () => {
+  cron.schedule("* */1 * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweet();
@@ -317,24 +367,24 @@ export const scheduleJobs = async () => {
   });
 
   // Schedule craftingTweetAboutAnNarrative every 3 hours
-  cron.schedule("0 */3 * * *", async () => {
-    console.log("Starting craftingTweetAboutAnNarrative job...");
-    try {
-      await craftingTweetAboutAnNarrative();
-      console.log("craftingTweetAboutAnNarrative job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutAnNarrative job:", error);
-    }
-  });
+  // cron.schedule("0 */3 * * *", async () => {
+  //   console.log("Starting craftingTweetAboutAnNarrative job...");
+  //   try {
+  //     await craftingTweetAboutAnNarrative();
+  //     console.log("craftingTweetAboutAnNarrative job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutAnNarrative job:", error);
+  //   }
+  // });
 
   // Schedule craftingTweetAboutAnTopic every 4 hours
-  cron.schedule("0 */4 * * *", async () => {
-    console.log("Starting craftingTweetAboutAnTopic job...");
-    try {
-      await craftingTweetAboutAnTopic();
-      console.log("craftingTweetAboutAnTopic job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutAnTopic job:", error);
-    }
-  });
+  // cron.schedule("0 */4 * * *", async () => {
+  //   console.log("Starting craftingTweetAboutAnTopic job...");
+  //   try {
+  //     await craftingTweetAboutAnTopic();
+  //     console.log("craftingTweetAboutAnTopic job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutAnTopic job:", error);
+  //   }
+  // });
 };

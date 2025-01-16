@@ -62,6 +62,8 @@ import {
   craftingTweetAboutToken,
   createNewsHealines,
   createQuestion,
+  createReflectionsAPI,
+  giveReplyToTweet,
   performLearning,
   performLearningAboutToken,
   performLearningAndTweet,
@@ -273,6 +275,8 @@ const chat_with_feeder_terminal = async () => {
 
 scheduleJobs();
 // performLearningAndTweet();
+// createReflectionsAPI();
+// giveReplyToTweet();
 // createNewsHealines();
 
 app.listen(3333, () => {
