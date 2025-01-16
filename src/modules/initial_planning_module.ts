@@ -356,7 +356,7 @@ export const scheduleJobs = async () => {
   // });
 
   // Schedule craftingTweetAboutToken every 2 hours
-  cron.schedule("* */1 * * *", async () => {
+  cron.schedule("0 */1 * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweet();
