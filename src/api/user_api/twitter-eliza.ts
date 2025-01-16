@@ -266,3 +266,10 @@ export const followUser = async (username: string) => {
 
   console.log(response);
 };
+
+// export const replyToTweet = async (tweetId: string, reply: string) => {
+//   await loginTwitter();
+//   const response = await scraper.(tweetId, reply);
+
+//   console.log(response);
+// }

@@ -13,5 +13,5 @@ import { chroma } from "genkitx-chromadb";
 
 export const ai = genkit({
   plugins: [googleAI(), vertexAI(), chromeDB],
-  model: gemini15Pro, // set default model
+  model: gemini15Flash, // set default model
 });
