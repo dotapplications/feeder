@@ -435,7 +435,8 @@ export const scheduleJobs = async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       var tokenArray = await getTokenArray();
-      const contextToken = tokenArray.tokensToTweet[0];
+      const contextToken =
+        tokenArray.tokensToTweet[tokenArray.tokensToTweet.length - 1];
       if (contextToken) {
         // remove tweeted token from tokensToTweet and add to tweetedTokens if it does not exist (make everything lowercase)
 
