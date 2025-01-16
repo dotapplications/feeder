@@ -260,7 +260,6 @@ export const performTwitterSearch = async (topic: string) => {
 };
 
 export const craftingTweetAboutToken = async (tokenSymbol: string) => {
-  const details = searchGrokAboutToken(tokenSymbol.toUpperCase());
   const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting a tweet about an token you found in the below tweets (recomended) or from your knowledge and also find some more info about the token from your knowledge, you can also add your own thoughts about the token and why you found it, include the deails of the tokens, like any news, or trading related metrics  you found. use $ with token symbol to search for the token`;
 
   const prompt = `tweets\n ${tokenSymbol}`;
