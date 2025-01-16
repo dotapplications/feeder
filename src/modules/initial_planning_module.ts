@@ -166,23 +166,23 @@ export const performLearningAndTweet = async () => {
 
   // Process tokens with a delay
 
-  // Process tokens with a delay
-  for (const token of response.output.tokens_to_track) {
-    await performLearningAboutToken(token.token_symbol);
-    await delay(60000); // 1 minute delay
-  }
+  // // Process tokens with a delay
+  // for (const token of response.output.tokens_to_track) {
+  //   await performLearningAboutToken(token.token_symbol);
+  //   await delay(60000); // 1 minute delay
+  // }
 
-  // Process topics with a delay
-  for (const topic of response.output.topics_to_track) {
-    await performTwitterSearch(topic.topic);
-    await delay(60000); // 1 minute delay
-  }
+  // // Process topics with a delay
+  // for (const topic of response.output.topics_to_track) {
+  //   await performTwitterSearch(topic.topic);
+  //   await delay(60000); // 1 minute delay
+  // }
 
-  // Process narratives with a delay
-  for (const narrative of response.output.narratives_to_track) {
-    await performTwitterSearch(narrative.narrative);
-    await delay(60000); // 1 minute delay
-  }
+  // // Process narratives with a delay
+  // for (const narrative of response.output.narratives_to_track) {
+  //   await performTwitterSearch(narrative.narrative);
+  //   await delay(60000); // 1 minute delay
+  // }
 };
 
 export const giveReplyToTweet = async () => {
