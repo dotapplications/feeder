@@ -281,3 +281,9 @@ export const searchGrokAboutToken = async (name: string) => {
 
   return JSON.stringify(tokenDetails);
 };
+// export const replyToTweet = async (tweetId: string, reply: string) => {
+//   await loginTwitter();
+//   const response = await scraper.(tweetId, reply);
+
+//   console.log(response);
+// }

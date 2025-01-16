@@ -7,7 +7,10 @@ import {
   searchAboutaTokenAPI,
   searchTwitterAPI,
 } from "../api/user_api/twitter-eliza";
-import { retriveAllMemoriesContext } from "../api/settings_api/memory_invocation_tools";
+import {
+  getPersonalityMemory,
+  retriveAllMemoriesContext,
+} from "../api/settings_api/memory_invocation_tools";
 import {
   token_searched_schema,
   tweet_schema,
@@ -16,6 +19,8 @@ import {
 import { handleAgentResponse } from "./response_modules";
 import { GenerateResponse, z } from "genkit";
 import { headline_schema } from "../schemas/headline_schema";
+import { retriveEntityMemory } from "../memory/entity_memory";
+import { retrivePersonalityMemory } from "../memory/peronality_memory";
 
 export const performLearning = async () => {
   await loginTwitter();
@@ -45,6 +50,13 @@ export const performLearning = async () => {
 
   // Process tokens with a delay
 
+  // if (response.output.tweet_to_reply) {
+  //   await replayToAnTweet(
+  //     response.output.tweet_to_reply.tweet_id,
+  //     response.output.tweet_to_reply.tweet
+  //   );
+  // }
+
   // Process tokens with a delay
   for (const token of response.output.tokens_to_track) {
     await performLearningAboutToken(token.token_symbol);
@@ -62,6 +74,31 @@ export const performLearning = async () => {
     await performTwitterSearch(narrative.narrative);
     await delay(60000); // 1 minute delay
   }
+};
+
+export const replayToAnTweet = async (tweetId: string, tweet: string) => {
+  var knowledge = await retriveEntityMemory(tweet);
+  var personality = await retrivePersonalityMemory(tweet);
+
+  var system = `Reply to the tweet below use the knowledge from the content ${JSON.stringify(
+    knowledge
+  )} `;
+  var prompt = `tweet: ${tweet} \n use the following context as personality ${JSON.stringify(
+    personality
+  )}`;
+
+  var response = await ai.generate({
+    system: system,
+    prompt: prompt,
+    output: {
+      schema: z.object({
+        reply: z.string().describe("less than 280 characters"),
+      }),
+    },
+  });
+
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
 };
 
 export const performLearningAndTweet = async () => {
