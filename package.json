@@ -22,7 +22,7 @@
     "@genkit-ai/firebase": "^0.9.12",
     "@genkit-ai/googleai": "^0.9.12",
     "@genkit-ai/vertexai": "^0.9.12",
-    "agent-twitter-client": "^0.0.18",
+    "agent-twitter-client": "github:elizaOS/agent-twitter-client",
     "chromadb": "^1.10.0",
     "chromadb-default-embed": "^2.13.2",
     "dotenv": "^16.4.7",
