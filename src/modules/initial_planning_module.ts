@@ -160,6 +160,8 @@ export const performLearningAndTweet = async () => {
   var tokenArray = await getTokenArray();
 
   response.output.tokens_to_track.forEach((token) => {
+    //if token symbol has $ symbol remove it
+    token.token_symbol = token.token_symbol.replace("$", "");
     if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
       tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
     }
@@ -476,8 +478,13 @@ export const scheduleJobs = async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       var tokenArray = await getTokenArray();
-      const contextToken =
-        tokenArray.tokensToTweet[tokenArray.tokensToTweet.length - 1];
+      //find a token from tokenArray.tokensToTweet that is not in tokenArray.tweetedTokens
+      const contextToken = tokenArray.tokensToTweet.find(
+        (token: string) =>
+          !tokenArray.tweetedTokens.includes(token.toLowerCase())
+      );
+      // const contextToken =
+      //   tokenArray.tokensToTweet[tokenArray.tokensToTweet.length - 1];
       if (contextToken) {
         // remove tweeted token from tokensToTweet and add to tweetedTokens if it does not exist (make everything lowercase)
 

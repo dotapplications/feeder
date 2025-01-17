@@ -22,3 +22,22 @@ export const setTokenArray = async (tokenArray: any) => {
     throw error;
   }
 };
+
+
+// function that calls getTokenArray and remove from $ symbol from the tokenArray.tokensToTweet and tokenArray.tweetedTokens and call setTokenArray
+export const getAndRemoveTokenArray = async () => {
+  try {
+    const tokenArray = await getTokenArray();
+    const tokensToTweet = tokenArray.tokensToTweet.map((token: string) => token.replace("$", ""));
+    const tweetedTokens = tokenArray.tweetedTokens.map((token: string) => token.replace("$", ""));
+    const newTokenArray = {
+      tokensToTweet,
+      tweetedTokens,
+    };
+    await setTokenArray(newTokenArray);
+    return newTokenArray;
+  } catch (error) {
+    console.error("Error getting and removing token array:", error);
+    throw error;
+  }
+};
