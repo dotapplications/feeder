@@ -285,7 +285,7 @@ export const craftingTweetAboutToken = async (tweets: string) => {
 
 export const craftDetailedTweet = async (tweets: string) => {
   const grokResponse = await grokCreateTweetSummary(tweets);
-  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below informations, don't use hashtags, and include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) Consider your personaliy`;
+  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below informations, don't use hashtags, bold text, and include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) Consider your personaliy`;
 
   const prompt = `${grokResponse}`;
 
