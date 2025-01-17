@@ -189,9 +189,16 @@ export const createTweetAPI = async (tweet: string) => {
   }
 };
 
+export const removeStarStar = (tweet: string): string => {
+  // Use a regular expression to match and remove all occurrences of '**'
+  const cleanedTweet = tweet.replace(/\*\*/g, "");
+  return cleanedTweet;
+};
+
 export const sentLongTweet = async (tweet: string) => {
   try {
-    await scraper.sendLongTweet(tweet);
+    var cleanedTweet = removeStarStar(tweet);
+    await scraper.sendLongTweet(cleanedTweet);
   } catch (e) {
     console.error("Error sending tweet:", e);
   }
