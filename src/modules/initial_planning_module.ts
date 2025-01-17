@@ -2,6 +2,7 @@ import { ai } from "../genkit_init";
 import cron from "node-cron";
 import {
   checkIsLoggedIn,
+  grokCreateTweetSummary,
   loginTwitter,
   readTwitterHomeTimeline,
   searchAboutaTokenAPI,
@@ -13,6 +14,7 @@ import {
   retriveAllMemoriesContext,
 } from "../api/settings_api/memory_invocation_tools";
 import {
+  long_tweet_schema,
   token_searched_schema,
   tweet_schema,
   twitter_schema,
@@ -171,7 +173,7 @@ export const performLearningAndTweet = async () => {
   // await createNewsHealines(twitterFeedData);
   // await delay(60000); // 1 minute delay
 
-  await craftingTweetAboutToken(twitterFeedData);
+  await craftDetailedTweet(twitterFeedData);
   await delay(60000); // 1 minute delay
 
   // Process tokens with a delay
@@ -259,10 +261,10 @@ export const performTwitterSearch = async (topic: string) => {
   await handleAgentResponse(response);
 };
 
-export const craftingTweetAboutToken = async (tokenSymbol: string) => {
+export const craftingTweetAboutToken = async (tweets: string) => {
   const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting a tweet about an token you found in the below tweets (recomended) or from your knowledge and also find some more info about the token from your knowledge, you can also add your own thoughts about the token and why you found it, include the deails of the tokens, like any news, or trading related metrics  you found. use $ with token symbol to search for the token`;
 
-  const prompt = `tweets\n ${tokenSymbol}`;
+  const prompt = `tweets\n ${tweets}`;
 
   var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
@@ -272,6 +274,27 @@ export const craftingTweetAboutToken = async (tokenSymbol: string) => {
     prompt: prompt,
     output: {
       schema: tweet_schema,
+    },
+  });
+
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
+};
+
+export const craftDetailedTweet = async (tweets: string) => {
+  const grokResponse = await grokCreateTweetSummary(tweets);
+  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below informations, don't use hashtags, and include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) Consider your personaliy`;
+
+  const prompt = `${grokResponse}`;
+
+  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+
+  var response = await ai.generate({
+    docs: docs,
+    system: systemPrompt,
+    prompt: prompt,
+    output: {
+      schema: long_tweet_schema,
     },
   });
 
@@ -385,6 +408,25 @@ export const createQuestion = async (twitterData: string) => {
   return response.output.question;
 };
 
+export const replyToTweet = async (tweetId: string, tweet: string) => {
+  const grokResponse = await searchGrokAboutToken(tweet);
+  const system = `Reply to the tweet below use the knowledge from the content ${tweet} `;
+  const prompt = `tweet: ${tweet}`;
+
+  const response = await ai.generate({
+    system: system,
+    prompt: prompt,
+    output: {
+      schema: z.object({
+        reply: z.string().describe("less than 280 characters"),
+      }),
+    },
+  });
+
+  console.log("Response from agent", response.output);
+  await handleAgentResponse(response);
+};
+
 export const scheduleJobs = async () => {
   // cron.schedule("0 */1 * * *", async () => {
   //   console.log("Starting performLearning job...");
@@ -430,7 +472,7 @@ export const scheduleJobs = async () => {
   // });
 
   //schedular for every 30 mins that will tweet about token
-  cron.schedule("*/31 * * * *", async () => {
+  cron.schedule("*/34 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       var tokenArray = await getTokenArray();

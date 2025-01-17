@@ -161,3 +161,19 @@ export const tweet_schema = z.object({
       "observations from of the activity to store in my experience memory"
     ),
 });
+
+export const long_tweet_schema = z.object({
+  tweet_thread: z
+    .string()
+    .describe(
+      " dont't use hashtags, you can use emojis if you want to express your feelings."
+    ),
+  activity_summary: z
+    .string()
+    .describe("summary of the activity to store in my experience memory"),
+  observation: z
+    .string()
+    .describe(
+      "observations from of the activity to store in my experience memory"
+    ),
+});

@@ -293,6 +293,38 @@ export const searchGrokAboutToken = async (name: string) => {
 
   return JSON.stringify(tokenDetails);
 };
+
+export const grokCreateTweetSummary = async (tweets: string) => {
+  await loginTwitter();
+
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `give me an detailed tweet about summary of the tweets, tweets: ${tweets}, in the percepective of an crypto trader. Include maximum information.`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
+export const generateReply = async (tweet: string) => {
+  await loginTwitter();
+  console.log("searching grok for token", name);
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `give me an detailed tweet by fetching all the details regarding ${name}  Token and all the recent information about the token. Include maximum information.`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
 // export const replyToTweet = async (tweetId: string, reply: string) => {
 //   await loginTwitter();
 //   const response = await scraper.(tweetId, reply);
