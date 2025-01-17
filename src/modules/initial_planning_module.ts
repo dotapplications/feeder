@@ -472,7 +472,7 @@ export const scheduleJobs = async () => {
   // });
 
   //schedular for every 30 mins that will tweet about token
-  cron.schedule("*/34 * * * *", async () => {
+  cron.schedule("*/45 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       var tokenArray = await getTokenArray();
