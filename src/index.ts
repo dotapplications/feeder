@@ -276,7 +276,7 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-// scheduleJobs();
+scheduleJobs();
 // findWhatMostPeopleTalking();
 
 // craftTweetUsingGrok("ROSS");
