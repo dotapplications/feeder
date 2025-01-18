@@ -20,7 +20,7 @@ export const twitter_schema = z.object({
   user_to_follow: z
     .string()
     .describe(
-      " only if you feels his tweet are good and you want to follow him, be selective"
+      "be selective, and only if it needed, follow the user whith more reach(like good views, retweets, likes)"
     )
     .optional(),
   tweet_id_to_like: z
