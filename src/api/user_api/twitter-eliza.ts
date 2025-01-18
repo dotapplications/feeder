@@ -301,6 +301,23 @@ export const searchGrokAboutToken = async (name: string) => {
   return JSON.stringify(tokenDetails);
 };
 
+export const tweetAboutPopularToken = async () => {
+  await loginTwitter();
+
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `which token is trending on token? Generate a random, short tweet about that token, in a playful, meme-like manner. It should also be informative, including some basic info on its market performance or tokenomics, don't use hastag, and it should be very short and humorous if you can,use $ along with symbol, `,
+      },
+    ],
+  });
+
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
 export const grokCreateTweetSummary = async (tweets: string) => {
   await loginTwitter();
 

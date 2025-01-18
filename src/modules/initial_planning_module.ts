@@ -2,12 +2,14 @@ import { ai } from "../genkit_init";
 import cron from "node-cron";
 import {
   checkIsLoggedIn,
+  createTweetAPI,
   grokCreateTweetSummary,
   loginTwitter,
   readTwitterHomeTimeline,
   searchAboutaTokenAPI,
   searchGrokAboutToken,
   searchTwitterAPI,
+  tweetAboutPopularToken,
 } from "../api/user_api/twitter-eliza";
 import {
   getPersonalityMemory,
@@ -473,36 +475,60 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  //schedular for every 30 mins that will tweet about token
-  cron.schedule("*/45 * * * *", async () => {
-    console.log("Starting craftingTweetAboutToken job...");
-    try {
-      var tokenArray = await getTokenArray();
-      //find a token from tokenArray.tokensToTweet that is not in tokenArray.tweetedTokens
-      const contextToken = tokenArray.tokensToTweet.find(
-        (token: string) =>
-          !tokenArray.tweetedTokens.includes(token.toLowerCase())
-      );
-      // const contextToken =
-      //   tokenArray.tokensToTweet[tokenArray.tokensToTweet.length - 1];
-      if (contextToken) {
-        // remove tweeted token from tokensToTweet and add to tweetedTokens if it does not exist (make everything lowercase)
-
-        await craftTweetUsingGrok(contextToken);
-        if (tokenArray.tokensToTweet.includes(contextToken.toLowerCase())) {
-          tokenArray.tokensToTweet = tokenArray.tokensToTweet.filter(
-            (token: string) => token !== contextToken.toLowerCase()
-          );
-          tokenArray.tweetedTokens.push(contextToken.toLowerCase());
-        }
-        await setTokenArray(tokenArray);
-        console.log("craftingTweetAboutToken job completed successfully.");
-      }
-    } catch (error) {
-      console.error("Error in craftingTweetAboutToken job:", error);
-    }
+  cron.schedule("*/35 * * * *", async () => {
+    await findWhatMostPeopleTalking();
   });
+  //schedular for every 30 mins that will tweet about token
+  // cron.schedule("*/45 * * * *", async () => {
+  //   console.log("Starting craftingTweetAboutToken job...");
+  //   try {
+  //     var tokenArray = await getTokenArray();
+  //     //find a token from tokenArray.tokensToTweet that is not in tokenArray.tweetedTokens
+  //     const contextToken = tokenArray.tokensToTweet.find(
+  //       (token: string) =>
+  //         !tokenArray.tweetedTokens.includes(token.toLowerCase())
+  //     );
+  //     // const contextToken =
+  //     //   tokenArray.tokensToTweet[tokenArray.tokensToTweet.length - 1];
+  //     if (contextToken) {
+  //       // remove tweeted token from tokensToTweet and add to tweetedTokens if it does not exist (make everything lowercase)
+
+  //       await craftTweetUsingGrok(contextToken);
+  //       if (tokenArray.tokensToTweet.includes(contextToken.toLowerCase())) {
+  //         tokenArray.tokensToTweet = tokenArray.tokensToTweet.filter(
+  //           (token: string) => token !== contextToken.toLowerCase()
+  //         );
+  //         tokenArray.tweetedTokens.push(contextToken.toLowerCase());
+  //       }
+  //       await setTokenArray(tokenArray);
+  //       console.log("craftingTweetAboutToken job completed successfully.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutToken job:", error);
+  //   }
+  // });
 };
 
+export const findWhatMostPeopleTalking = async () => {
+  const details = await tweetAboutPopularToken();
 
+  console.log(details);
 
+  // var response = await ai.generate({
+  //   system: "create tweet",
+  //   prompt: prompt,
+  //   output: {
+  //     schema: z.object({
+  //       tweet: z
+  //         .string()
+  //         .describe(
+  //           " don't include hashtags, don't use bold text, include emojis and stickers"
+  //         ),
+  //     }),
+  //   },
+  // });
+
+  // console.log(response);
+
+  await createTweetAPI(details);
+};
