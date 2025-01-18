@@ -509,10 +509,20 @@ export const scheduleJobs = async () => {
   // });
 };
 
+function removeOnlyQuotes(str: string): string {
+  if (str.charAt(0) === '"' && str.charAt(str.length - 1) === '"') {
+    return str.slice(1, -1);
+  }
+  return str;
+}
+
 export const findWhatMostPeopleTalking = async () => {
   const details = await tweetAboutPopularToken();
 
   console.log(details);
+  const tweet = removeOnlyQuotes(details);
+
+  // check fist letter and last letter is ", then remove both " from first and last
 
   // var response = await ai.generate({
   //   system: "create tweet",
@@ -530,5 +540,5 @@ export const findWhatMostPeopleTalking = async () => {
 
   // console.log(response);
 
-  await createTweetAPI(details);
+  await createTweetAPI(tweet);
 };
