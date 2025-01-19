@@ -363,7 +363,7 @@ export const craftingTweetAboutToken = async (tweets: string) => {
 
 export const craftDetailedTweet = async (tweets: string) => {
   const grokResponse = await grokCreateTweetSummary(tweets);
-  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below information. It should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. `;
+  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below information. It should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
 
   const prompt = `${grokResponse}`;
 
@@ -386,7 +386,7 @@ export const craftTweetUsingGrok = async (tokenSymbol: string) => {
   const details = await searchGrokAboutToken(tokenSymbol);
   console.log("Details", details);
 
-  const systemPrompt = `Draft a tweet using the below content, and it should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. `;
+  const systemPrompt = `Draft a tweet using the below content, and it should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
   var docs = await retrivePersonalityMemory(systemPrompt);
 
   var prompt = details;
@@ -490,7 +490,7 @@ export const createQuestion = async (twitterData: string) => {
 
 export const replyToTweet = async (tweetId: string, tweet: string) => {
   const grokResponse = await generateReplyToTweetGrok(tweet);
-  const system = `create an short reply for the tweet:${tweet}, using the information below by providing value or information to the tweet, don't use hashtags, bold text or any special characters. Just include facts and information in a way that can attain maximum engagement (use humour if necessary).`;
+  const system = `create an short reply for the tweet:${tweet}, using the information below by providing value or information to the tweet, don't use hashtags, bold text or any special characters. Just include facts and information in a way that can attain maximum engagement (use humour if necessary). Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
   const prompt = grokResponse;
 
   // const docs = await retriveAllMemoriesContext(system + "\n" + prompt);
