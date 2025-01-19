@@ -269,6 +269,12 @@ export const retweetTweet = async (tweetId: string) => {
   console.log(response);
 };
 
+export const replyToTweetAPI = async (tweetId: string, reply_tweet: string) => {
+  const response = await scraper.sendTweet(reply_tweet, tweetId);
+
+  console.log(response);
+};
+
 // check my profile and analyze
 export const checkProfile = async () => {
   await loginTwitter();
@@ -293,6 +299,20 @@ export const searchGrokAboutToken = async (name: string) => {
       {
         role: "user",
         content: `give me an detailed tweet by fetching all the details regarding ${name}  Token and all the recent information about the token. Include maximum information.`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
+export const generateReplyToTweetGrok = async (tweet: string) => {
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `Gather all recent informations about the tweet:${tweet}, for generating a reply to the tweet. Include maximum information.`,
       },
     ],
   });

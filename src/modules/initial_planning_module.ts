@@ -3,9 +3,11 @@ import cron from "node-cron";
 import {
   checkIsLoggedIn,
   createTweetAPI,
+  generateReplyToTweetGrok,
   grokCreateTweetSummary,
   loginTwitter,
   readTwitterHomeTimeline,
+  replyToTweetAPI,
   searchAboutaTokenAPI,
   searchGrokAboutToken,
   searchTwitterAPI,
@@ -177,28 +179,102 @@ export const performLearningAndTweet = async () => {
   // await createNewsHealines(twitterFeedData);
   // await delay(60000); // 1 minute delay
 
+  console.log("Response from agent", response.output.tweet_to_reply);
+
   await craftDetailedTweet(twitterFeedData);
   await delay(60000); // 1 minute delay
 
   // Process tokens with a delay
 
-  // // Process tokens with a delay
-  // for (const token of response.output.tokens_to_track) {
-  //   await performLearningAboutToken(token.token_symbol);
-  //   await delay(60000); // 1 minute delay
-  // }
+  // Process tokens with a delay
+  for (const token of response.output.tokens_to_track) {
+    await performLearningAboutToken(token.token_symbol);
+    await delay(60000); // 1 minute delay
+  }
 
-  // // Process topics with a delay
-  // for (const topic of response.output.topics_to_track) {
-  //   await performTwitterSearch(topic.topic);
-  //   await delay(60000); // 1 minute delay
-  // }
+  // Process topics with a delay
+  for (const topic of response.output.topics_to_track) {
+    await performTwitterSearch(topic.topic);
+    await delay(60000); // 1 minute delay
+  }
 
-  // // Process narratives with a delay
-  // for (const narrative of response.output.narratives_to_track) {
-  //   await performTwitterSearch(narrative.narrative);
-  //   await delay(60000); // 1 minute delay
-  // }
+  // Process narratives with a delay
+  for (const narrative of response.output.narratives_to_track) {
+    await performTwitterSearch(narrative.narrative);
+    await delay(60000); // 1 minute delay
+  }
+};
+
+export const performLearningReply = async () => {
+  await loginTwitter();
+  const twitterFeedData = await readTwitterHomeTimeline();
+  const systemPrompt =
+    "You are an autonomous agent named Feeder, you will be reading twitter feeds below and generate output based on the information you have read";
+  const prompt = `${twitterFeedData}`;
+  const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
+  var docs = await retriveAllMemoriesContext(complete_prompt);
+
+  var response = await ai.generate({
+    docs: docs,
+    system: systemPrompt,
+    prompt: prompt,
+    output: {
+      schema: twitter_schema,
+    },
+  });
+
+  console.log("Response from agent", response);
+
+  // Helper function to add delay
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  var tokenArray = await getTokenArray();
+
+  response.output.tokens_to_track.forEach((token) => {
+    //if token symbol has $ symbol remove it
+    token.token_symbol = token.token_symbol.replace("$", "");
+    if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
+      tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
+    }
+  });
+
+  await setTokenArray(tokenArray);
+
+  // await createQuestion(twitterFeedData);
+  // await delay(60000); // 1 minute delay
+
+  // await createNewsHealines(twitterFeedData);
+  // await delay(60000); // 1 minute delay
+
+  console.log("Response from agent", response.output.tweet_to_reply);
+
+  await delay(60000); // 1 minute delay
+
+  await replyToTweet(
+    response.output.tweet_to_reply.tweet_id,
+    response.output.tweet_to_reply.tweet
+  );
+
+  // Process tokens with a delay
+
+  // Process tokens with a delay
+  for (const token of response.output.tokens_to_track) {
+    await performLearningAboutToken(token.token_symbol);
+    await delay(60000); // 1 minute delay
+  }
+
+  // Process topics with a delay
+  for (const topic of response.output.topics_to_track) {
+    await performTwitterSearch(topic.topic);
+    await delay(60000); // 1 minute delay
+  }
+
+  // Process narratives with a delay
+  for (const narrative of response.output.narratives_to_track) {
+    await performTwitterSearch(narrative.narrative);
+    await delay(60000); // 1 minute delay
+  }
 };
 
 export const giveReplyToTweet = async () => {
@@ -413,21 +489,31 @@ export const createQuestion = async (twitterData: string) => {
 };
 
 export const replyToTweet = async (tweetId: string, tweet: string) => {
-  const grokResponse = await searchGrokAboutToken(tweet);
-  const system = `Reply to the tweet below use the knowledge from the content ${tweet} `;
-  const prompt = `tweet: ${tweet}`;
+  const grokResponse = await generateReplyToTweetGrok(tweet);
+  const system = `create an short reply for the tweet:${tweet}, using the informations below, Engage with humor to draw attention but then provide value or information within the same reply`;
+  const prompt = grokResponse;
+
+  // const docs = await retriveAllMemoriesContext(system + "\n" + prompt);
 
   const response = await ai.generate({
     system: system,
     prompt: prompt,
+    // docs: docs,
     output: {
       schema: z.object({
-        reply: z.string().describe("less than 280 characters"),
+        reply: z
+          .string()
+          .describe("less than 280 characters, don't use hashtags"),
+        activity_summary: z.string().describe("summary of the activity"),
+        observation: z.string().describe("observations "),
       }),
     },
   });
 
-  console.log("Response from agent", response.output);
+  // console.log("Response from agent", response.output);
+  console.log("tweet id" + tweetId);
+  console.log("reply " + tweetId);
+  replyToTweetAPI(tweetId, response.output.reply);
   await handleAgentResponse(response);
 };
 
@@ -477,6 +563,10 @@ export const scheduleJobs = async () => {
 
   cron.schedule("*/35 * * * *", async () => {
     await findWhatMostPeopleTalking();
+  });
+
+  cron.schedule("*/20 * * * *", async () => {
+    await performLearningReply();
   });
   //schedular for every 30 mins that will tweet about token
   // cron.schedule("*/45 * * * *", async () => {

@@ -109,10 +109,9 @@ export const twitter_schema_search = z.object({
   tweet_to_reply: z
     .object({
       tweet: z.string(),
-      my_reply: z.string(),
       tweet_id: z.string(),
     })
-    .describe("Do retweet only if you feels necessory")
+    .describe("reply to the tweet only if you feels necessory")
     .optional(),
 
   activity_summary: z.string().describe("summary of the activity"),

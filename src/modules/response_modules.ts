@@ -51,6 +51,7 @@ interface ResponseData {
     my_reply: string;
     tweet_id: string;
   };
+
   headline?: string;
   knowledge_update?: string;
   activity_summary?: string;
