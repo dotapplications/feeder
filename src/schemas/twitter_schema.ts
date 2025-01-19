@@ -17,12 +17,12 @@ export const twitter_schema = z.object({
     z.object({ topic: z.string(), details: z.string() })
   ),
 
-  user_to_follow: z
-    .string()
-    .describe(
-      "be selective, and only if it needed, follow the user whith more reach(like good views, retweets, likes)"
-    )
-    .optional(),
+  // user_to_follow: z
+  //   .string()
+  //   .describe(
+  //     "be selective, and only if it needed, follow the user whith more reach(like good views, retweets, likes)"
+  //   )
+  //   .optional(),
   tweet_id_to_like: z
     .string()
     .describe(
@@ -64,12 +64,12 @@ export const twitter_schema_home = z.object({
     .describe(
       "id of the tweet you feels need to retweet, it is optional only retweet if you feels it is good, be selective"
     ),
-  user_to_follow: z
-    .string()
-    .describe(
-      "user to follow, only if you feels his tweet are good and you want to follow him, be selective"
-    )
-    .optional(),
+  // user_to_follow: z
+  //   .string()
+  //   .describe(
+  //     "user to follow, only if you feels his tweet are good and you want to follow him, be selective"
+  //   )
+  //   .optional(),
   tweet_id_to_like: z
     .string()
     .describe(
