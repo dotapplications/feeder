@@ -155,54 +155,54 @@ export const performLearningAndTweet = async () => {
     },
   });
 
-  console.log("Response from agent", response);
+  console.log("Response from agent", response.output.observation);
 
   // Helper function to add delay
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  // const delay = (ms: number) =>
+  //   new Promise((resolve) => setTimeout(resolve, ms));
 
-  var tokenArray = await getTokenArray();
+  // var tokenArray = await getTokenArray();
 
-  response.output.tokens_to_track.forEach((token) => {
-    //if token symbol has $ symbol remove it
-    token.token_symbol = token.token_symbol.replace("$", "");
-    if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
-      tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
-    }
-  });
+  // response.output.tokens_to_track.forEach((token) => {
+  //   //if token symbol has $ symbol remove it
+  //   token.token_symbol = token.token_symbol.replace("$", "");
+  //   if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
+  //     tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
+  //   }
+  // });
 
-  await setTokenArray(tokenArray);
+  // await setTokenArray(tokenArray);
 
-  // await createQuestion(twitterFeedData);
+  // // await createQuestion(twitterFeedData);
+  // // await delay(60000); // 1 minute delay
+
+  // // await createNewsHealines(twitterFeedData);
+  // // await delay(60000); // 1 minute delay
+
+  // console.log("Response from agent", response.output.tweet_to_reply);
+
+  // await craftDetailedTweet(twitterFeedData);
   // await delay(60000); // 1 minute delay
 
-  // await createNewsHealines(twitterFeedData);
-  // await delay(60000); // 1 minute delay
+  // // Process tokens with a delay
 
-  console.log("Response from agent", response.output.tweet_to_reply);
+  // // Process tokens with a delay
+  // for (const token of response.output.tokens_to_track) {
+  //   await performLearningAboutToken(token.token_symbol);
+  //   await delay(60000); // 1 minute delay
+  // }
 
-  await craftDetailedTweet(twitterFeedData);
-  await delay(60000); // 1 minute delay
+  // // Process topics with a delay
+  // for (const topic of response.output.topics_to_track) {
+  //   await performTwitterSearch(topic.topic);
+  //   await delay(60000); // 1 minute delay
+  // }
 
-  // Process tokens with a delay
-
-  // Process tokens with a delay
-  for (const token of response.output.tokens_to_track) {
-    await performLearningAboutToken(token.token_symbol);
-    await delay(60000); // 1 minute delay
-  }
-
-  // Process topics with a delay
-  for (const topic of response.output.topics_to_track) {
-    await performTwitterSearch(topic.topic);
-    await delay(60000); // 1 minute delay
-  }
-
-  // Process narratives with a delay
-  for (const narrative of response.output.narratives_to_track) {
-    await performTwitterSearch(narrative.narrative);
-    await delay(60000); // 1 minute delay
-  }
+  // // Process narratives with a delay
+  // for (const narrative of response.output.narratives_to_track) {
+  //   await performTwitterSearch(narrative.narrative);
+  //   await delay(60000); // 1 minute delay
+  // }
 };
 
 export const performLearningReply = async () => {
@@ -363,7 +363,7 @@ export const craftingTweetAboutToken = async (tweets: string) => {
 
 export const craftDetailedTweet = async (tweets: string) => {
   const grokResponse = await grokCreateTweetSummary(tweets);
-  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below information. It should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
+  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below informations, don't use hashtags, bold text, may include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) and precise`;
 
   const prompt = `${grokResponse}`;
 
@@ -386,7 +386,7 @@ export const craftTweetUsingGrok = async (tokenSymbol: string) => {
   const details = await searchGrokAboutToken(tokenSymbol);
   console.log("Details", details);
 
-  const systemPrompt = `Draft a tweet using the below content, and it should be well formatted for enhancing readability of the tweet. Consider your personality. Try to be short and precise, and don't use hashtags, bold text, or any special characters. Include emojis and stickers only if necessary. Maximum engagement is the goal. Just include facts and information in a way that can attain maximum engagement. Be straight to the point. Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
+  const systemPrompt = `formate below content, don't use hashtags, bold text, include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) Consider your personaliy`;
   var docs = await retrivePersonalityMemory(systemPrompt);
 
   var prompt = details;
@@ -490,7 +490,7 @@ export const createQuestion = async (twitterData: string) => {
 
 export const replyToTweet = async (tweetId: string, tweet: string) => {
   const grokResponse = await generateReplyToTweetGrok(tweet);
-  const system = `create an short reply for the tweet:${tweet}, using the information below by providing value or information to the tweet, don't use hashtags, bold text or any special characters. Just include facts and information in a way that can attain maximum engagement (use humour if necessary). Avoid disclaimer, introduction or conclusion. Instead focus on the content by including facts or information as much as possible. `;
+  const system = `create an short reply for the tweet:${tweet}, using the informations below, Engage with humor to draw attention but then provide value or information within the same reply`;
   const prompt = grokResponse;
 
   // const docs = await retriveAllMemoriesContext(system + "\n" + prompt);
