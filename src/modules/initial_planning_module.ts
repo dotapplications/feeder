@@ -27,7 +27,10 @@ import { handleAgentResponse } from "./response_modules";
 import { GenerateResponse, z } from "genkit";
 import { headline_schema } from "../schemas/headline_schema";
 import { retriveEntityMemory } from "../memory/entity_memory";
-import { retrivePersonalityMemory } from "../memory/peronality_memory";
+import {
+  retrivePersonalityMemory,
+  shanks_personality,
+} from "../memory/peronality_memory";
 import { retriveExperienceMemory } from "../memory/experience_memory";
 import { getTokenArray, setTokenArray } from "../api/user_api/tweet_tokens";
 
@@ -141,7 +144,7 @@ export const performLearningAndTweet = async () => {
   await loginTwitter();
   const twitterFeedData = await readTwitterHomeTimeline();
   const systemPrompt =
-    "You are an autonomous agent named Feeder, you will be reading twitter feeds below and generate output based on the information you have read";
+    "you will be reading twitter feeds below and generate output based on the most important and relvent information you have read";
   const prompt = `${twitterFeedData}`;
   const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
   var docs = await retriveAllMemoriesContext(complete_prompt);
@@ -158,8 +161,8 @@ export const performLearningAndTweet = async () => {
   console.log("Response from agent", response.output.observation);
 
   // Helper function to add delay
-  // const delay = (ms: number) =>
-  //   new Promise((resolve) => setTimeout(resolve, ms));
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   // var tokenArray = await getTokenArray();
 
@@ -173,20 +176,21 @@ export const performLearningAndTweet = async () => {
 
   // await setTokenArray(tokenArray);
 
-  // // await createQuestion(twitterFeedData);
-  // // await delay(60000); // 1 minute delay
-
-  // // await createNewsHealines(twitterFeedData);
-  // // await delay(60000); // 1 minute delay
-
-  // console.log("Response from agent", response.output.tweet_to_reply);
-
-  // await craftDetailedTweet(twitterFeedData);
+  // await createQuestion(twitterFeedData);
   // await delay(60000); // 1 minute delay
 
-  // // Process tokens with a delay
+  // await createNewsHealines(twitterFeedData);
+  // await delay(60000); // 1 minute delay
 
-  // // Process tokens with a delay
+  console.log("Response from agent", response.output.tweet_to_reply);
+  await delay(60000);
+
+  await craftDetailedTweet(twitterFeedData);
+  // 1 minute delay
+
+  // Process tokens with a delay
+
+  // Process tokens with a delay
   // for (const token of response.output.tokens_to_track) {
   //   await performLearningAboutToken(token.token_symbol);
   //   await delay(60000); // 1 minute delay
@@ -363,14 +367,20 @@ export const craftingTweetAboutToken = async (tweets: string) => {
 
 export const craftDetailedTweet = async (tweets: string) => {
   const grokResponse = await grokCreateTweetSummary(tweets);
-  const systemPrompt = `You are an autonmous agent named Feeder, you will be crafting an detailed market update tweet using below informations, don't use hashtags, bold text, may include emojis and stickers, and it should be well formated (consider spacing content with line breaks for readability) and precise`;
 
-  const prompt = `${grokResponse}`;
+  // console.log(grokResponse);
+  // const personalityMemoryDoc = await retrivePersonalityMemory(
+  //   "You are creating an tweet about your prediction and observervation"
+  // );
+  // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
+  const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction, tweet should be well formated,  don't use hashtags, bold text, may include emojis and stickers`;
 
-  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+  const prompt = `${grokResponse} \n consider below personality while tweeting ${shanks_personality}`;
+
+  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
-    docs: docs,
+    // docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {
@@ -529,7 +539,7 @@ export const scheduleJobs = async () => {
   // });
 
   // Schedule craftingTweetAboutToken every 2 hours
-  cron.schedule("0 */1 * * *", async () => {
+  cron.schedule("*/30 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweet();
@@ -561,9 +571,9 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/35 * * * *", async () => {
-    await findWhatMostPeopleTalking();
-  });
+  // cron.schedule("*/35 * * * *", async () => {
+  //   await findWhatMostPeopleTalking();
+  // });
 
   cron.schedule("*/20 * * * *", async () => {
     await performLearningReply();

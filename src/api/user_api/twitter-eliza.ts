@@ -345,7 +345,7 @@ export const grokCreateTweetSummary = async (tweets: string) => {
     messages: [
       {
         role: "user",
-        content: `give me an detailed tweet about summary of the tweets, tweets: ${tweets}, in the percepective of an crypto trader. Include maximum information.`,
+        content: `Which is the most insightful or speculative tweet in here and generate observation and predictions around that tweet, by gathering maximum information, tweets: ${tweets},`,
       },
     ],
   });

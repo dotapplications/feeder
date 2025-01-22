@@ -19,6 +19,14 @@ export const chromeDB = chroma([
     },
   },
   {
+    collectionName: "personality_memory_shanks",
+    createCollectionIfMissing: true,
+    embedder: textEmbedding004,
+    clientParams: {
+      path: process.env.CHROMA_DB_PATH,
+    },
+  },
+  {
     collectionName: "entity_memmory",
     createCollectionIfMissing: true,
     embedder: textEmbedding004,
@@ -46,8 +54,12 @@ export const chromeDB = chroma([
 ]);
 /// indexers
 
+// export const personality_indexer = chromaIndexerRef({
+//   collectionName: "personality_memory",
+// });
+
 export const personality_indexer = chromaIndexerRef({
-  collectionName: "personality_memory",
+  collectionName: "personality_memory_shanks",
 });
 export const entity_indexer = chromaIndexerRef({
   collectionName: "entity_memmory",
@@ -60,8 +72,12 @@ export const experience_indexer = chromaIndexerRef({
 });
 
 /// retrivers
+// export const personality_memory_retriver = chromaRetrieverRef({
+//   collectionName: "personality_memory",
+// });
+
 export const personality_memory_retriver = chromaRetrieverRef({
-  collectionName: "personality_memory",
+  collectionName: "personality_memory_shanks",
 });
 export const entity_memory_retriver = chromaRetrieverRef({
   collectionName: "entity_memmory",

@@ -59,6 +59,7 @@ import {
 import { createDailyObjective } from "./api/agent_api/create_daily_objectives";
 import { createTasksFromObjectives } from "./api/agent_api/create_tasks_from_objectives_agent";
 import {
+  craftDetailedTweet,
   craftTweetUsingGrok,
   craftingTweetAboutToken,
   createNewsHealines,
@@ -69,6 +70,7 @@ import {
   performLearning,
   performLearningAboutToken,
   performLearningAndTweet,
+  performTwitterSearch,
   scheduleJobs,
 } from "./modules/initial_planning_module";
 import { getTokenArray, setTokenArray } from "./api/user_api/tweet_tokens";
@@ -276,11 +278,11 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-// scheduleJobs();
+scheduleJobs();
 // findWhatMostPeopleTalking();
 
 // craftTweetUsingGrok("ROSS");
-performLearningAndTweet();
+// performLearningAndTweet();
 // createReflectionsAPI();
 // giveReplyToTweet();
 // createNewsHealines();
@@ -478,3 +480,337 @@ const tasks = [
 // performLearningAboutToken("AI16Z");
 
 // craftingTweetAboutToken();
+
+const tweets = [
+  {
+    tweet:
+      "🚨 BREAKING 🚨\n\n$250 MILLION USDC JUST MINTED.\n\nBULLS ARE COMING 🔥 https://t.co/srppcLE48p",
+    tweet_id: "1881745513743323617",
+    like: 1516,
+    retweet: 208,
+    reply: 204,
+  },
+  {
+    tweet:
+      "BITCOIN JUST BROKE $106,000 🚀\n\nSEND IT TO NEW ALL TIME HIGHS !! https://t.co/PDT8UMxSDj",
+    tweet_id: "1881737693719298496",
+    like: 1864,
+    retweet: 232,
+    reply: 222,
+  },
+  {
+    tweet:
+      "Memecoin ETFs filed including: $TRUMP, $DOGE and $BONK.\n\nThis cycle is wild lmao",
+    tweet_id: "1881715665012400153",
+    like: 46,
+    retweet: 2,
+    reply: 7,
+  },
+  {
+    tweet:
+      "Donald Trump is starting to stake his ETH\n\nLet me say that again....\n\nThe President of the USA is staking ETH https://t.co/jRPwpiuuwz",
+    tweet_id: "1881450526543684037",
+    like: 7842,
+    retweet: 1102,
+    reply: 308,
+  },
+  {
+    tweet: "buy and hold ______",
+    tweet_id: "1881667131747737743",
+    like: 717,
+    retweet: 91,
+    reply: 224,
+  },
+  {
+    tweet:
+      "The best trades are actually the ones where you buy and nothing happens for a week then it explodes. This is why so many buy something, sell after a few days of boring action, then complain that they sold right before it took off.",
+    tweet_id: "1881465728752320833",
+    like: 1030,
+    retweet: 70,
+    reply: 115,
+  },
+  {
+    tweet:
+      "Bye work, hello #CRYPTO!\n\nWhich #100x #Altcoins have I missed today!? Let me know below 👇\n\n#SOL #DOT #TRX #BNB #INJ #MATIC #EGLD",
+    tweet_id: "1881730221721932173",
+    like: 51,
+    retweet: 5,
+    reply: 96,
+  },
+  {
+    tweet: "I feel rugged. https://t.co/th3rUU0a8P",
+    tweet_id: "1881511685930066223",
+    like: 12830,
+    retweet: 687,
+    reply: 2181,
+  },
+  {
+    tweet: "What Are We Buying Today?!",
+    tweet_id: "1881688950038810977",
+    like: 498,
+    retweet: 57,
+    reply: 798,
+  },
+  {
+    tweet:
+      "I have just looked at over 30 different charts and every crypto I have seen looks ready for a parabolic move.\n\nAre you ready?",
+    tweet_id: "1881716039895097718",
+    like: 1838,
+    retweet: 137,
+    reply: 437,
+  },
+  {
+    tweet:
+      "The issue with CT is that most people here are discussing the market with a short term bias (gets more engagement).\n\nHowever, most of you aren't trading on the 15m chart (and probably shouldn't). \n\nSo why would you let short-term sentiment on X affect your long-term strategy?",
+    tweet_id: "1881699918634709393",
+    like: 315,
+    retweet: 17,
+    reply: 64,
+  },
+  {
+    tweet: "Exciting News For $XRP Holders! https://t.co/toKeHjobBv",
+    tweet_id: "1881733501541564904",
+    like: 55,
+    retweet: 4,
+    reply: 35,
+  },
+  {
+    tweet: "What’s the ticker for today?",
+    tweet_id: "1881595323254276214",
+    like: 253,
+    retweet: 113,
+    reply: 438,
+  },
+  {
+    tweet: 'did you just say "spleet" that\'s some real urban lingo',
+    tweet_id: "1881742418451603809",
+    like: 23,
+    retweet: 2,
+    reply: 20,
+  },
+  {
+    tweet:
+      "all this sol stuff just really makes it clearer that @base is gonna come out victorious.\n\n$wlfi -&gt; $eth -&gt; @base\n\nbehold",
+    tweet_id: "1881712868791558591",
+    like: 15,
+    retweet: 2,
+    reply: 6,
+  },
+  {
+    tweet: "“My empire is falling into place” https://t.co/oTyx6Ipq50",
+    tweet_id: "1881468177210802495",
+    like: 6574,
+    retweet: 773,
+    reply: 1116,
+  },
+  {
+    tweet: "Memecoins will overshoot everyone’s expectations.\n\n$1 Trillion +",
+    tweet_id: "1881674073065058396",
+    like: 4833,
+    retweet: 660,
+    reply: 1265,
+  },
+  {
+    tweet: "Notis on??\n\nLets cook",
+    tweet_id: "1881637614085890544",
+    like: 88,
+    retweet: 23,
+    reply: 69,
+  },
+  {
+    tweet:
+      "Mantle is quietly shaping the future of on-chain finance.\n\nFrom efficient liquidity with Mantle Network to ETH staking via mETH Protocol and bridging Bitcoin with Ignition FBTC, they’re building a connected decentralized economy.\n\nBacked by a $4B Treasury and powered by $MNT,…",
+    tweet_id: "1881749832143946002",
+    like: 6,
+    retweet: 0,
+    reply: 1,
+  },
+  {
+    tweet: "ansem did nothing wrong",
+    tweet_id: "1881695176714014913",
+    like: 250,
+    retweet: 12,
+    reply: 96,
+  },
+  {
+    tweet: "JUST IN: #Bitcoin reclaims $104,000 💥\n https://t.co/4tdmQP0wa2",
+    tweet_id: "1881677287336382886",
+    like: 8116,
+    retweet: 1239,
+    reply: 428,
+  },
+  {
+    tweet:
+      "Imagine thinking Bitcoin has topped when Trump just bought $47m wrapped $BTC\n\nHIGHER... 🚀",
+    tweet_id: "1881741035224916258",
+    like: 915,
+    retweet: 95,
+    reply: 82,
+  },
+  {
+    tweet:
+      "If you want to become a better trader focus on finding one really good opportunity/trade each month. Too many end up losing all their money overtrading or becoming over exposed that by the time a really good trade presents itself they don't have capital to play it.",
+    tweet_id: "1881451557268668843",
+    like: 1094,
+    retweet: 90,
+    reply: 79,
+  },
+  {
+    tweet: "gm pre-rich frends",
+    tweet_id: "1881605258738295059",
+    like: 430,
+    retweet: 64,
+    reply: 258,
+  },
+  {
+    tweet: "the world is coming onchain 🌎🌍🌏",
+    tweet_id: "1881699385727496660",
+    like: 5819,
+    retweet: 587,
+    reply: 1155,
+  },
+  {
+    tweet: "Low MC memecoin to $1 billion MC 💰",
+    tweet_id: "1881647677819244733",
+    like: 125,
+    retweet: 34,
+    reply: 278,
+  },
+  {
+    tweet: "It’s coming \n\nI can feel it https://t.co/fkFD1J53k2",
+    tweet_id: "1881637207259464034",
+    like: 3965,
+    retweet: 391,
+    reply: 450,
+  },
+  {
+    tweet: "What’s your TOP 1 crypto GEM?? 💎🔝",
+    tweet_id: "1881391238060122194",
+    like: 184,
+    retweet: 47,
+    reply: 305,
+  },
+  {
+    tweet:
+      "What are we buying on @tamadotmeme?\n\nSo far I have:\nRLP\nRONER \nKANSTAR\nKOKU\nCOCO\nCK\nFZYORI\nPOTATO\n\nAnything missing?",
+    tweet_id: "1881721552519266467",
+    like: 64,
+    retweet: 9,
+    reply: 52,
+  },
+  {
+    tweet: "gaming category on kaito soon imo",
+    tweet_id: "1881739108101632403",
+    like: 30,
+    retweet: 3,
+    reply: 12,
+  },
+  {
+    tweet:
+      "Kaito rigged the game to win.\n\nEveryone is incentivized to support them.",
+    tweet_id: "1881430278599757883",
+    like: 167,
+    retweet: 6,
+    reply: 92,
+  },
+  {
+    tweet: "Is it too late to GM? ☀️ https://t.co/fgqKLL67QJ",
+    tweet_id: "1881655637211599192",
+    like: 597,
+    retweet: 34,
+    reply: 445,
+  },
+  {
+    tweet:
+      "🚨 RUMOR ALERT: $TRUMP TO SIGN 3 CRYPTO RELATED EXECUTIVE ORDERS TODAY 🇺🇸 https://t.co/wgesxP86Mn",
+    tweet_id: "1881735158765949354",
+    like: 2480,
+    retweet: 476,
+    reply: 361,
+  },
+  {
+    tweet:
+      "The Trumps met the Bidens at the White House, exchanging greetings on the day Donald Trump will be sworn in as the 47th president inside the US Capitol.\n\nWATCH LIVE\nhttps://t.co/CtC9YWf3Vx https://t.co/QLb4DD1v8t",
+    tweet_id: "1881363622263493090",
+    like: 162544,
+    retweet: 17069,
+    reply: 5711,
+  },
+  {
+    tweet:
+      "JUST IN: The official D.O.G.E. website is now live featuring the $DOGE logo. https://t.co/gjRXSvQxrh",
+    tweet_id: "1881671002054447179",
+    like: 2637,
+    retweet: 398,
+    reply: 142,
+  },
+];
+
+const performLearningAndTweets = async () => {
+  // await loginTwitter();
+  const twitterFeedData = tweets;
+  console.log(twitterFeedData);
+  // const systemPrompt =
+  //   "you will be reading twitter feeds below and generate output based on the most important and relvent information you have read";
+  // const prompt = `${twitterFeedData}`;
+  // const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
+  // var docs = await retriveAllMemoriesContext(complete_prompt);
+
+  // var response = await ai.generate({
+  //   docs: docs,
+  //   system: systemPrompt,
+  //   prompt: prompt,
+  //   output: {
+  //     schema: twitter_schema,
+  //   },
+  // });
+
+  // console.log("Response from agent", response.output);
+
+  // Helper function to add delay
+  // response.output.tokens_to_track.forEach((token) => {
+  //   //if token symbol has $ symbol remove it
+  //   token.token_symbol = token.token_symbol.replace("$", "");
+  //   if (!tokenArray.tokensToTweet.includes(token.token_symbol.toLowerCase())) {
+  //     tokenArray.tokensToTweet.push(token.token_symbol.toLowerCase());
+  //   }
+  // });
+
+  // await setTokenArray(tokenArray);
+
+  // await createQuestion(twitterFeedData);
+  // await delay(60000); // 1 minute delay
+
+  // await createNewsHealines(twitterFeedData);
+  // await delay(60000); // 1 minute delay
+
+  // console.log("Response from agent", response.output.tweet_to_reply);
+
+  await craftDetailedTweet(twitterFeedData.toString());
+  // await delay(60000); // 1 minute delay
+
+  // // Process tokens with a delay
+
+  // // Process tokens with a delay
+  // for (const token of response.output.tokens_to_track) {
+  //   await performLearningAboutToken(token.token_symbol);
+  //   await delay(60000); // 1 minute delay
+  // }
+
+  // // Process topics with a delay
+  // for (const topic of response.output.topics_to_track) {
+  //   await performTwitterSearch(topic.topic);
+  //   await delay(60000); // 1 minute delay
+  // }
+
+  // // Process narratives with a delay
+  // for (const narrative of response.output.narratives_to_track) {
+  //   await performTwitterSearch(narrative.narrative);
+  //   await delay(60000); // 1 minute delay
+  // }const delay = (ms: number) =>
+  //   new Promise((resolve) => setTimeout(resolve, ms));
+
+  // var tokenArray = await getTokenArray();
+};
+
+// performLearningAndTweets();
