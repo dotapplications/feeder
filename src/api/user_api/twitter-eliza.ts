@@ -214,14 +214,16 @@ export const readTwitterHomeTimeline = async () => {
   tweets.forEach((tweet: any) => {
     const legacy = tweet.legacy;
 
-    // add the new json into the reponsetweets array
-    responseTweets.push({
-      tweet: legacy.full_text,
-      tweet_id: legacy.conversation_id_str,
-      like: legacy.favorite_count,
-      retweet: legacy.retweet_count,
-      reply: legacy.reply_count,
-    });
+    if (legacy) {
+      // add the new json into the reponsetweets array
+      responseTweets.push({
+        tweet: legacy.full_text,
+        tweet_id: legacy.conversation_id_str,
+        like: legacy.favorite_count,
+        retweet: legacy.retweet_count,
+        reply: legacy.reply_count,
+      });
+    }
 
     // // Access specific properties within the `legacy` object
     // console.log("Full Text:", legacy.full_text);
