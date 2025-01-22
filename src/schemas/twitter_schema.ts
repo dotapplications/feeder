@@ -30,13 +30,15 @@ export const twitter_schema = z.object({
     )
     .optional(),
 
-  tweet_to_reply: z
-    .object({
-      tweet: z.string(),
-      my_reply: z.string().describe("reply to the tweet"),
-      tweet_id: z.string(),
-    })
-    .describe("reply to the tweet only if you feels necessory")
+  tweets_to_reply: z
+    .array(
+      z.object({
+        tweet: z.string(),
+        my_reply: z.string().describe("reply to the tweet"),
+        tweet_id: z.string(),
+      })
+    )
+    .describe("reply to the tweet only if you feels important")
     .optional(),
 
   activity_summary: z.string().describe("summary of the activity"),

@@ -270,9 +270,18 @@ export const retweetTweet = async (tweetId: string) => {
 };
 
 export const replyToTweetAPI = async (tweetId: string, reply_tweet: string) => {
-  const response = await scraper.sendTweet(reply_tweet, tweetId);
+  // Check if tweetId is a numeric string
+  if (!/^\d+$/.test(tweetId)) {
+    console.log("Invalid tweetId: Skipping sendTweet function.");
+    return;
+  }
 
-  console.log(response);
+  try {
+    const response = await scraper.sendTweet(reply_tweet, tweetId);
+    console.log(response);
+  } catch (error) {
+    console.error("Error sending tweet:", error);
+  }
 };
 
 // check my profile and analyze
@@ -312,7 +321,7 @@ export const generateReplyToTweetGrok = async (tweet: string) => {
     messages: [
       {
         role: "user",
-        content: `Gather all recent informations about the tweet:${tweet}, for generating a reply to the tweet. Include maximum information.`,
+        content: `make a predictions and observations by gathering all recent informations about the tweet:${tweet}, for generating a reply to the tweet. Include maximum information.`,
       },
     ],
   });
@@ -329,6 +338,23 @@ export const tweetAboutPopularToken = async () => {
       {
         role: "user",
         content: `which token is trending on token? Generate a random, short tweet about that token, in a playful, meme-like manner. It should also be informative, including some basic info on its market performance or tokenomics, don't use hastag, and it should be very short and humorous if you can,use $ along with symbol, `,
+      },
+    ],
+  });
+
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
+export const tweetAboutTokenGrok = async (tweets: string) => {
+  await loginTwitter();
+
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `Which is the most insightful or speculative tweet about an token in here and generate observation and predictions around that tweet, by gathering maximum information, tweets:${tweets} `,
       },
     ],
   });

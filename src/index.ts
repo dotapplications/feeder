@@ -70,6 +70,8 @@ import {
   performLearning,
   performLearningAboutToken,
   performLearningAndTweet,
+  performLearningAndTweetAboutToken,
+  performLearningReply,
   performTwitterSearch,
   scheduleJobs,
 } from "./modules/initial_planning_module";
@@ -279,10 +281,13 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+// performLearningReply();
 // findWhatMostPeopleTalking();
 
 // craftTweetUsingGrok("ROSS");
 // performLearningAndTweet();
+
+// performLearningAndTweetAboutToken();
 // createReflectionsAPI();
 // giveReplyToTweet();
 // createNewsHealines();
