@@ -26,6 +26,7 @@ const loginAndSetCookies = async () => {
     await clearCookies();
     // Login with username and password
     await scraper.login(
+    
       process.env.TWITTER_USERNAME!,
       process.env.TWITTER_PASSWORD!
     );
