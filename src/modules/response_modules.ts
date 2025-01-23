@@ -45,7 +45,7 @@ interface ResponseData {
   narratives_to_track?: NarrativeToTrack[];
   user_to_follow?: string;
   tweet_id_to_retweet?: string;
-  tweet_id_to_like?: string;
+  tweets_ids_to_like?: string[];
   tweet_to_reply?: {
     tweet: string;
     my_reply: string;
@@ -213,10 +213,14 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
               console.log("Retweeting tweet:", output[key]);
               if (output[key]) await retweetTweet(output[key]);
               break;
-            case "tweet_id_to_like":
+            case "tweets_ids_to_like":
               // Handle tweet id to like
               console.log("Liking tweet:", output[key]);
-              if (output[key]) await likeTweet(output[key]);
+              if (output[key]) {
+                for (const tweetID of output[key]) {
+                  await likeTweet(tweetID);
+                }
+              }
               break;
             case "updated_personality":
               // Handle personality update

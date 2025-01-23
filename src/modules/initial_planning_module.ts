@@ -159,7 +159,7 @@ export const performLearningAndTweet = async () => {
     },
   });
 
-  console.log("Response from agent", response.output.observation);
+  console.log("Response from agent", response.output);
 
   // Helper function to add delay
   const delay = (ms: number) =>
@@ -618,7 +618,9 @@ export const replyToTweet = async (tweetId: string, tweet: string) => {
       schema: z.object({
         reply: z
           .string()
-          .describe("less than 280 characters, don't use hashtags"),
+          .describe(
+            "very few content, should be less than 280 characters, don't use hashtags, and well formated, split contents as lines"
+          ),
         activity_summary: z.string().describe("summary of the activity"),
       }),
     },

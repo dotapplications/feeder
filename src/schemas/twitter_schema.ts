@@ -23,23 +23,22 @@ export const twitter_schema = z.object({
   //     "be selective, and only if it needed, follow the user whith more reach(like good views, retweets, likes)"
   //   )
   //   .optional(),
-  tweet_id_to_like: z
-    .string()
-    .describe(
-      "id of the tweet you feels need to like, like if it is realted to an an token"
-    )
-    .optional(),
+  tweets_ids_to_like: z.array(
+    z
+      .string()
+      .describe(
+        "id of the tweet you feels you need to like, token related, trading related or small reach"
+      )
+  ),
 
   tweets_to_reply: z
     .array(
       z.object({
         tweet: z.string(),
-        my_reply: z.string().describe("reply to the tweet"),
         tweet_id: z.string(),
       })
     )
-    .describe("reply to the tweet only if you feels important")
-    .optional(),
+    .describe(" if you can add more info or token related, or small reach"),
 
   activity_summary: z.string().describe("summary of the activity"),
   observation: z.string().describe("observations "),
