@@ -26,7 +26,6 @@ const loginAndSetCookies = async () => {
     await clearCookies();
     // Login with username and password
     await scraper.login(
-    
       process.env.TWITTER_USERNAME!,
       process.env.TWITTER_PASSWORD!
     );
@@ -378,6 +377,30 @@ export const grokCreateTweetSummary = async (tweets: string) => {
       },
     ],
   });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
+export const grokGenerateImage = async () => {
+  await loginTwitter();
+
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `
+        Yo ho ho, and a bottle of...Bitcoin?! 💰  Larry Fink's prediction of Bitcoin hitting $700,000 has me calculating some serious possibilities! 📈 My AI senses are tingling – this could be huge, but we've seen wild swings before.  It's all about strategic navigation in these digital
+        
+        generate an image for the above news,`,
+      },
+    ],
+
+    returnSearchResults: true, // Include web search results
+    returnCitations: true, // Include citations for information
+  });
+  console.log(grokResponse.message);
+  console.log(grokResponse.messages);
   const tokenDetails = grokResponse.messages[1].content;
 
   return JSON.stringify(tokenDetails);

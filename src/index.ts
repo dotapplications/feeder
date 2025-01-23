@@ -32,6 +32,7 @@ import { executeTask } from "./api/agent_api/execute_task";
 import { retrivePersonalityMemory } from "./memory/peronality_memory";
 import {
   createTweetAPI,
+  grokGenerateImage,
   loginTwitter,
   readTwitterHomeTimeline,
   tryRetweet,
@@ -280,12 +281,13 @@ const chat_with_feeder_terminal = async () => {
 // const planningModule = new LLMPlanningModule();
 // planningModule.initialize();
 
-scheduleJobs();
+// scheduleJobs();
+// grokGenerateImage();
 // performLearningReply();
 // findWhatMostPeopleTalking();
 
 // craftTweetUsingGrok("ROSS");
-// performLearningAndTweet();
+performLearningAndTweet();
 
 // performLearningAndTweetAboutToken();
 // createReflectionsAPI();

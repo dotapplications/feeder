@@ -26,7 +26,7 @@ export const twitter_schema = z.object({
   tweet_id_to_like: z
     .string()
     .describe(
-      "id of the tweet you feels need to like, it is optional only like if you feels it is good, be selective"
+      "id of the tweet you feels need to like, like if it is realted to an an token"
     )
     .optional(),
 
@@ -167,7 +167,7 @@ export const long_tweet_schema = z.object({
   tweet_thread: z
     .string()
     .describe(
-      " dont't use hashtags, you can use emojis if you want to express your feelings."
+      " dont't use hashtags, it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
     ),
   activity_summary: z
     .string()

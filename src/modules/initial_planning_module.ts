@@ -464,6 +464,7 @@ export const craftDetailedTweet = async (tweets: string) => {
   });
 
   console.log("Response from agent", response.output);
+
   await handleAgentResponse(response);
 };
 
