@@ -166,7 +166,7 @@ export const long_tweet_schema = z.object({
   tweet_thread: z
     .string()
     .describe(
-      " dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
+      " should be less than 550 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
     ),
   activity_summary: z
     .string()
