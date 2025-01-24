@@ -34,6 +34,7 @@ import {
   createTweetAPI,
   grokGenerateImage,
   loginTwitter,
+  monitorAIXBTTweets,
   readTwitterHomeTimeline,
   tryRetweet,
 } from "./api/user_api/twitter-eliza";
@@ -68,6 +69,7 @@ import {
   createReflectionsAPI,
   findWhatMostPeopleTalking,
   giveReplyToTweet,
+  monitoringAIXBTAndTweeting,
   performLearning,
   performLearningAboutToken,
   performLearningAndTweet,
@@ -282,6 +284,9 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+// monitorTweets();
+// monitorAIXBTTweets();
+// monitoringAIXBTAndTweeting();
 // grokGenerateImage();
 // performLearningReply();
 // findWhatMostPeopleTalking();

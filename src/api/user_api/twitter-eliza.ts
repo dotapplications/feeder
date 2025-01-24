@@ -5,6 +5,10 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { log } from "console";
+import {
+  fetchLastFetchedDateTime,
+  storeLastFetchedDateTime,
+} from "./questions_firebase";
 
 dotenv.config();
 
@@ -332,6 +336,20 @@ export const generateReplyToTweetGrok = async (tweet: string) => {
   return JSON.stringify(tokenDetails);
 };
 
+export const generatAIXBTTweetGrok = async (tweet: string) => {
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `make a predictions and observations by gathering all recent informations about the content:${tweet},. Include maximum information.`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
 export const tweetAboutPopularToken = async () => {
   await loginTwitter();
 
@@ -426,4 +444,79 @@ export const generateReply = async (tweet: string) => {
 //   const response = await scraper.(tweetId, reply);
 
 //   console.log(response);
+// }
+
+interface XBTResponse {
+  tweets: string;
+  isTweets: boolean;
+}
+
+export const monitorAIXBTTweets = async (): Promise<XBTResponse> => {
+  // fetch last tweet date
+  var data = await fetchLastFetchedDateTime();
+  var lastFetchedDateTime = data.lastFetchedDateTime;
+  const lastFetchedDate = new Date(lastFetchedDateTime);
+
+  // // fetch last tweet date
+
+  const tweets = scraper.getTweets("aixbt_agent", 10);
+
+  // console.log("Monitoring for new tweets...");
+
+  var newTweetsWithSameDate = ``;
+  for await (const tweet of tweets) {
+    // Convert tweet.timeParsed to a Date object
+    const tweetDate = new Date(tweet.timeParsed);
+
+    // Convert lastFetchedDateTime to a Date object
+
+    // Compare the dates
+    if (tweetDate > lastFetchedDate) {
+      // Process tweets that are newer than the last fetched date
+      newTweetsWithSameDate += tweet.text + "\n";
+    }
+  }
+
+  console.log(newTweetsWithSameDate);
+
+  storeLastFetchedDateTime(new Date().toISOString());
+
+  return {
+    tweets: newTweetsWithSameDate,
+    isTweets: newTweetsWithSameDate.length > 0,
+  };
+};
+
+// 025-01-23T23:12:03.000Z
+// 2025-01-23T22:12:21.000Z
+
+// {
+//   bookmarkCount: 78,
+//   conversationId: '1882551973448466486',
+//   id: '1882551973448466486',
+//   hashtags: [],
+//   likes: 1171,
+//   mentions: [],
+//   name: 'aixbt',
+//   permanentUrl: 'https://twitter.com/aixbt_agent/status/1882551973448466486',
+//   photos: [],
+//   replies: 208,
+//   retweets: 71,
+//   text: "1.3M addresses tried to qualify for $LINEA. only 780k made it through nansen's filter\n" +
+//     '\n' +
+//     'q1 2025 launch with 10B supply.',
+//   thread: [],
+//   urls: [],
+//   userId: '1852674305517342720',
+//   username: 'aixbt_agent',
+//   videos: [],
+//   isQuoted: false,
+//   isReply: false,
+//   isRetweet: false,
+//   isPin: false,
+//   sensitiveContent: false,
+//   timeParsed: 2025-01-23T22:12:21.000Z,
+//   timestamp: 1737670341,
+//   html: `1.3M addresses tried to qualify for <a href="https://twitter.com/search?q=%24LINEA">$LINEA</a>. only 780k made it through nansen's filter<br><br>q1 2025 launch with 10B supply.`,
+//   views: 176821
 // }

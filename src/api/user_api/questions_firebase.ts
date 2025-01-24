@@ -37,4 +37,24 @@ export const storeQuestionIntoDB = async (question: string) => {
   console.log("Question added");
 };
 
+export const storeLastFetchedDateTime = async (lastFetchedDateTime: string) => {
+  const docRef = constentCollection.doc("aixbt");
+  await docRef.set({
+    lastFetchedDateTime: lastFetchedDateTime,
+  });
+  console.log("Last fetched date time added");
+};
+
+export const fetchLastFetchedDateTime = async () => {
+  const docRef = constentCollection.doc("aixbt");
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    console.log("No such document!");
+    return null;
+  } else {
+    console.log("Document data:", doc.data());
+    return doc.data();
+  }
+};
+
 //
