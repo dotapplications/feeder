@@ -159,6 +159,7 @@ export const performLearningAndTweet = async () => {
     },
   });
 
+  handleAgentResponse(response);
   console.log("Response from agent", response.output);
 
   // Helper function to add delay
@@ -303,6 +304,8 @@ export const performLearningReply = async () => {
   });
 
   console.log("Response from agent", response.output);
+
+  handleAgentResponse(response);
 
   // Helper function to add delay
   const delay = (ms: number) =>
