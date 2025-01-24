@@ -148,10 +148,10 @@ export const performLearningAndTweet = async () => {
     "you will be reading twitter feeds below and generate output based on the most important and relvent information you have read";
   const prompt = `${twitterFeedData}`;
   const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
-  var docs = await retriveAllMemoriesContext(complete_prompt);
+  // var docs = await retriveAllMemoriesContext(complete_prompt);
 
   var response = await ai.generate({
-    docs: docs,
+    // docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {

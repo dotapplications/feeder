@@ -27,7 +27,7 @@ export const twitter_schema = z.object({
     z
       .string()
       .describe(
-        "id of the tweet you feels you need to like, token related, trading related or small reach"
+        "if token related, trading related,latest tweet, if it is small reach (less than 10k views)"
       )
   ),
 
@@ -38,7 +38,7 @@ export const twitter_schema = z.object({
         tweet_id: z.string(),
       })
     )
-    .describe(" if you can add more info or token related, or small reach"),
+    .describe("latest tweet, toke related, or trading related"),
 
   activity_summary: z.string().describe("summary of the activity"),
   observation: z.string().describe("observations "),
