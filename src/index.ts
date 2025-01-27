@@ -35,6 +35,7 @@ import {
   grokGenerateImage,
   loginTwitter,
   monitorAIXBTTweets,
+  myTweetsGather,
   readTwitterHomeTimeline,
   tryRetweet,
 } from "./api/user_api/twitter-eliza";
@@ -62,6 +63,7 @@ import { createDailyObjective } from "./api/agent_api/create_daily_objectives";
 import { createTasksFromObjectives } from "./api/agent_api/create_tasks_from_objectives_agent";
 import {
   craftDetailedTweet,
+  craftNewLaunchTweet,
   craftTweetUsingGrok,
   craftingTweetAboutToken,
   createNewsHealines,
@@ -78,7 +80,11 @@ import {
   performTwitterSearch,
   scheduleJobs,
 } from "./modules/initial_planning_module";
-import { getTokenArray, setTokenArray } from "./api/user_api/tweet_tokens";
+import {
+  clearNewLaunchTokens,
+  getTokenArray,
+  setTokenArray,
+} from "./api/user_api/tweet_tokens";
 
 const app = express();
 
@@ -284,6 +290,9 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+// clearNewLaunchTokens();
+// myTweetsGather();
+
 // monitorTweets();
 // monitorAIXBTTweets();
 // monitoringAIXBTAndTweeting();
@@ -759,7 +768,7 @@ const tweets = [
 ];
 
 const performLearningAndTweets = async () => {
-  // await loginTwitter();
+  await loginTwitter();
   const twitterFeedData = tweets;
   console.log(twitterFeedData);
   // const systemPrompt =

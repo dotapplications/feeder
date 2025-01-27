@@ -23,13 +23,42 @@ export const setTokenArray = async (tokenArray: any) => {
   }
 };
 
+export const clearNewLaunchTokens = async () => {
+  try {
+    const docRef = await tokensCollection.doc("token_array").get();
+
+    // Fetching the tokens array data
+    var tokensArray = docRef.data();
+
+    if (tokensArray) {
+      // Emptying tokens_launched_tweeted
+      tokensArray.tokens_launched_tweeted = [];
+
+      // Saving the updated tokens array back to the database
+      await tokensCollection.doc("token_array").set(tokensArray);
+
+      console.log("Successfully cleared tokens_launched_tweeted.");
+    } else {
+      console.warn("No data found in token_array document.");
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error setting token array:", error);
+    throw error;
+  }
+};
 
 // function that calls getTokenArray and remove from $ symbol from the tokenArray.tokensToTweet and tokenArray.tweetedTokens and call setTokenArray
 export const getAndRemoveTokenArray = async () => {
   try {
     const tokenArray = await getTokenArray();
-    const tokensToTweet = tokenArray.tokensToTweet.map((token: string) => token.replace("$", ""));
-    const tweetedTokens = tokenArray.tweetedTokens.map((token: string) => token.replace("$", ""));
+    const tokensToTweet = tokenArray.tokensToTweet.map((token: string) =>
+      token.replace("$", "")
+    );
+    const tweetedTokens = tokenArray.tweetedTokens.map((token: string) =>
+      token.replace("$", "")
+    );
     const newTokenArray = {
       tokensToTweet,
       tweetedTokens,

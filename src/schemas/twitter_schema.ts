@@ -177,3 +177,14 @@ export const long_tweet_schema = z.object({
       "observations from of the activity to store in my experience memory"
     ),
 });
+
+export const new_launch_token_schema = z.object({
+  tweet: z
+    .string()
+    .describe(
+      " should be less than 550 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
+    ),
+  token_symbol_tweeted: z
+    .string()
+    .describe("should be start with $ and capital letter"),
+});

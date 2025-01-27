@@ -92,7 +92,7 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
               // Handle tweet
               console.log("Creating tweet:", output[key]);
               const tweet = `${output[key]}`;
-              await createTweetAPI(tweet);
+              await sentLongTweet(tweet);
 
               break;
             case "narratives_to_track":

@@ -398,6 +398,24 @@ export const grokCreateTweetSummary = async (tweets: string) => {
   return JSON.stringify(tokenDetails);
 };
 
+export const grokCreateNewLaunchInformation = async (tokensString: string) => {
+  // await loginTwitter();
+
+  const grokResponse = await scraper.grokChat({
+    messages: [
+      {
+        role: "user",
+        content: `What the new launching or launched token that getting viral on x,  make observations and predictions about that token by gathering all informations about that token
+
+        exclude the tokens ${tokensString}`,
+      },
+    ],
+  });
+  const tokenDetails = grokResponse.messages[1].content;
+
+  return JSON.stringify(tokenDetails);
+};
+
 export const grokGenerateImage = async () => {
   await loginTwitter();
 
@@ -483,6 +501,30 @@ export const monitorAIXBTTweets = async (): Promise<XBTResponse> => {
     tweets: newTweetsWithSameDate,
     isTweets: newTweetsWithSameDate.length > 0,
   };
+};
+
+export const myTweetsGather = async () => {
+  loginTwitter();
+  const tweets = scraper.getTweets("aixbt_agent", 100);
+
+  var responseTweets: any[] = [];
+
+  for await (const tweet of tweets) {
+    // Convert tweet.timeParsed to a Date object
+
+    responseTweets.push({
+      tweet: tweet.text,
+      like: tweet.likes,
+      retweet: tweet.retweets,
+      reply: tweet.replies,
+      time: tweet.timeParsed,
+      views: tweet.views,
+    });
+
+    // Convert lastFetchedDateTime to a Date object
+  }
+
+  console.log(JSON.stringify(responseTweets));
 };
 
 // 025-01-23T23:12:03.000Z

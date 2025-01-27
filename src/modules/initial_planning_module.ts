@@ -5,6 +5,7 @@ import {
   createTweetAPI,
   generatAIXBTTweetGrok,
   generateReplyToTweetGrok,
+  grokCreateNewLaunchInformation,
   grokCreateTweetSummary,
   loginTwitter,
   monitorAIXBTTweets,
@@ -22,6 +23,7 @@ import {
 } from "../api/settings_api/memory_invocation_tools";
 import {
   long_tweet_schema,
+  new_launch_token_schema,
   token_searched_schema,
   tweet_schema,
   twitter_schema,
@@ -35,7 +37,11 @@ import {
   shanks_personality,
 } from "../memory/peronality_memory";
 import { retriveExperienceMemory } from "../memory/experience_memory";
-import { getTokenArray, setTokenArray } from "../api/user_api/tweet_tokens";
+import {
+  clearNewLaunchTokens,
+  getTokenArray,
+  setTokenArray,
+} from "../api/user_api/tweet_tokens";
 
 export const performLearning = async () => {
   await loginTwitter();
@@ -528,6 +534,63 @@ export const craftDetailedTweet = async (tweets: string) => {
   await handleAgentResponse(response);
 };
 
+export const craftNewLaunchTweet = async () => {
+  loginTwitter();
+  var tokensArrays = await getTokenArray();
+  // convert the token array into string by seperating comma
+  var tokensTweeted = tokensArrays.tokens_launched_tweeted.join(",");
+
+  console.log(tokensArrays.tokens_launched_tweeted);
+
+  //
+  const grokResponse = await grokCreateNewLaunchInformation(tokensTweeted);
+
+  // console.log(grokResponse);
+  // const personalityMemoryDoc = await retrivePersonalityMemory(
+  //   "You are creating an tweet about your prediction and observervation"
+  // );
+  // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
+  const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction, tweet should be well formated,  don't use hashtags, bold text, may include emojis and stickers`;
+
+  const prompt = `${grokResponse} \n consider below personality while tweeting ${shanks_personality}`;
+
+  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+
+  var response = await ai.generate({
+    // docs: docs,
+    system: systemPrompt,
+    prompt: prompt,
+    output: {
+      schema: new_launch_token_schema,
+    },
+  });
+
+  console.log("Response from agent", response.output);
+
+  var token_tweeted = response.output.token_symbol_tweeted;
+
+  // capitalise the symbol and add $ symbol, if it is not added
+  if (token_tweeted) {
+    // Capitalize the symbol
+    token_tweeted = token_tweeted.toUpperCase();
+
+    // Add $ symbol if not already present
+    if (!token_tweeted.startsWith("$")) {
+      token_tweeted = `$${token_tweeted}`;
+    }
+  }
+
+  tokensArrays.tokens_launched_tweeted.push(token_tweeted);
+
+  console.log(
+    "updated tokens launced twet" + tokensArrays.tokens_launched_tweeted
+  );
+
+  setTokenArray(tokensArrays);
+
+  await handleAgentResponse(response);
+};
+
 export const craftDetailedTweetAboutToken = async (tweets: string) => {
   const grokResponse = await tweetAboutTokenGrok(tweets);
 
@@ -736,7 +799,7 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/30 * * * *", async () => {
+  cron.schedule("0 */1 * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweetAboutToken();
@@ -746,10 +809,30 @@ export const scheduleJobs = async () => {
     }
   });
 
-  cron.schedule("*/15 * * * *", async () => {
+  // cron.schedule("*/15 * * * *", async () => {
+  //   console.log("Starting craftingTweetAboutToken job...");
+  //   try {
+  //     await monitoringAIXBTAndTweeting();
+  //     console.log("craftingTweetAboutToken job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutToken job:", error);
+  //   }
+  // });
+
+  cron.schedule("*/35 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
-      await monitoringAIXBTAndTweeting();
+      await craftNewLaunchTweet();
+      console.log("craftingTweetAboutToken job completed successfully.");
+    } catch (error) {
+      console.error("Error in craftingTweetAboutToken job:", error);
+    }
+  });
+
+  cron.schedule("0 */3 * * *", async () => {
+    console.log("Starting craftingTweetAboutToken job...");
+    try {
+      await clearNewLaunchTokens();
       console.log("craftingTweetAboutToken job completed successfully.");
     } catch (error) {
       console.error("Error in craftingTweetAboutToken job:", error);
