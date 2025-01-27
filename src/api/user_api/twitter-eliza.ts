@@ -368,8 +368,6 @@ export const tweetAboutPopularToken = async () => {
 };
 
 export const tweetAboutTokenGrok = async (tweets: string) => {
-  await loginTwitter();
-
   const grokResponse = await scraper.grokChat({
     messages: [
       {
