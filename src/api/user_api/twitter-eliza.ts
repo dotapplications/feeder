@@ -405,7 +405,7 @@ export const grokCreateNewLaunchInformation = async (tokensString: string) => {
     messages: [
       {
         role: "user",
-        content: `What the new launching or launched token that getting viral on x,  make observations and predictions about that token by gathering all informations about that token
+        content: `What the new launching or launched token that getting viral on x,  make observations and predictions about that token by gathering all informations (include trading matrices and analysis)) about that token
 
         exclude the tokens ${tokensString}`,
       },
