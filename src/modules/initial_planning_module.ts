@@ -799,7 +799,7 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("0 */1 * * *", async () => {
+  cron.schedule("*/35 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweetAboutToken();
@@ -809,35 +809,35 @@ export const scheduleJobs = async () => {
     }
   });
 
-  // cron.schedule("*/15 * * * *", async () => {
+  cron.schedule("*/15 * * * *", async () => {
+    console.log("Starting craftingTweetAboutToken job...");
+    try {
+      await monitoringAIXBTAndTweeting();
+      console.log("craftingTweetAboutToken job completed successfully.");
+    } catch (error) {
+      console.error("Error in craftingTweetAboutToken job:", error);
+    }
+  });
+
+  // cron.schedule("*/35 * * * *", async () => {
   //   console.log("Starting craftingTweetAboutToken job...");
   //   try {
-  //     await monitoringAIXBTAndTweeting();
+  //     await craftNewLaunchTweet();
   //     console.log("craftingTweetAboutToken job completed successfully.");
   //   } catch (error) {
   //     console.error("Error in craftingTweetAboutToken job:", error);
   //   }
   // });
 
-  cron.schedule("*/35 * * * *", async () => {
-    console.log("Starting craftingTweetAboutToken job...");
-    try {
-      await craftNewLaunchTweet();
-      console.log("craftingTweetAboutToken job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutToken job:", error);
-    }
-  });
-
-  cron.schedule("0 */6 * * *", async () => {
-    console.log("Starting craftingTweetAboutToken job...");
-    try {
-      await clearNewLaunchTokens();
-      console.log("craftingTweetAboutToken job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutToken job:", error);
-    }
-  });
+  // cron.schedule("0 */6 * * *", async () => {
+  //   console.log("Starting craftingTweetAboutToken job...");
+  //   try {
+  //     await clearNewLaunchTokens();
+  //     console.log("craftingTweetAboutToken job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutToken job:", error);
+  //   }
+  // });
 
   // Schedule craftingTweetAboutAnNarrative every 3 hours
   // cron.schedule("0 */3 * * *", async () => {
