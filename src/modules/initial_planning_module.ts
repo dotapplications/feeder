@@ -225,7 +225,6 @@ export const performLearningAndTweet = async () => {
 };
 
 export const performLearningAndTweetAboutToken = async () => {
-  await loginTwitter();
   const twitterFeedData = await readTwitterHomeTimeline();
   const systemPrompt =
     "you will be reading twitter feeds below and generate output based on the most important and relvent information you have read";

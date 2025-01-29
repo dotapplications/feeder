@@ -262,7 +262,6 @@ export const readTwitterHomeTimeline = async () => {
 };
 
 export const likeTweet = async (tweetId: string) => {
-  await loginTwitter();
   const response = await scraper.likeTweet(tweetId);
 
   console.log(response);
