@@ -306,7 +306,6 @@ export const followUser = async (username: string) => {
 };
 
 export const searchGrokAboutToken = async (name: string) => {
-  await loginTwitter();
   console.log("searching grok for token", name);
   const grokResponse = await scraper.grokChat({
     messages: [
@@ -440,7 +439,6 @@ export const grokGenerateImage = async () => {
 };
 
 export const generateReply = async (tweet: string) => {
-  await loginTwitter();
   console.log("searching grok for token", name);
   const grokResponse = await scraper.grokChat({
     messages: [

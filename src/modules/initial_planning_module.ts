@@ -295,7 +295,6 @@ export const performLearningAndTweetAboutToken = async () => {
 };
 
 export const performLearningReply = async () => {
-  await loginTwitter();
   const twitterFeedData = await readTwitterHomeTimeline();
   const systemPrompt =
     "you will be reading twitter feeds below and generate output based on the information you have read";
@@ -369,7 +368,6 @@ export const performLearningReply = async () => {
 };
 
 export const monitoringAIXBTAndTweeting = async () => {
-  await loginTwitter();
   const aixbtTweetResponse = await monitorAIXBTTweets();
 
   console.log("AIXBT Response", aixbtTweetResponse);
@@ -777,6 +775,7 @@ export const createPostWithAIXBT = async (tweet: string) => {
 };
 
 export const scheduleJobs = async () => {
+  await loginTwitter();
   // cron.schedule("0 */1 * * *", async () => {
   //   console.log("Starting performLearning job...");
   //   try {
@@ -798,7 +797,7 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/35 * * * *", async () => {
+  cron.schedule("*/1 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweetAboutToken();
