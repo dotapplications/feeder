@@ -797,7 +797,7 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/1 * * * *", async () => {
+  cron.schedule("*/35 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await performLearningAndTweetAboutToken();
