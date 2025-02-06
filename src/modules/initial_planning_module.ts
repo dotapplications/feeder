@@ -550,12 +550,12 @@ export const craftNewLaunchTweet = async () => {
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
   const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction (include trading matrices and analysis, or price prediction), tweet should be well formated (line spacing),  don't use hashtags, bold text, may include emojis and stickers`;
 
-  const prompt = `${grokResponse} \n consider below personality while tweeting ${shanks_personality}`;
+  const prompt = `${grokResponse} \n consider  your personality tweeting`;
 
-  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
-    // docs: docs,
+    docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {
@@ -599,12 +599,12 @@ export const craftDetailedTweetAboutToken = async (tweets: string) => {
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
   const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction, tweet should be well formated,  don't use hashtags, bold text, may include emojis and stickers`;
 
-  const prompt = `${grokResponse} \n consider below personality while tweeting ${shanks_personality}`;
+  const prompt = `${grokResponse} \n consider your personality before tweeting`;
 
-  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
-    // docs: docs,
+    docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {
@@ -808,25 +808,25 @@ export const scheduleJobs = async () => {
     }
   });
 
-  cron.schedule("*/15 * * * *", async () => {
-    console.log("Starting craftingTweetAboutToken job...");
-    try {
-      await monitoringAIXBTAndTweeting();
-      console.log("craftingTweetAboutToken job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutToken job:", error);
-    }
-  });
-
-  // cron.schedule("*/35 * * * *", async () => {
+  // cron.schedule("*/15 * * * *", async () => {
   //   console.log("Starting craftingTweetAboutToken job...");
   //   try {
-  //     await craftNewLaunchTweet();
+  //     await monitoringAIXBTAndTweeting();
   //     console.log("craftingTweetAboutToken job completed successfully.");
   //   } catch (error) {
   //     console.error("Error in craftingTweetAboutToken job:", error);
   //   }
   // });
+
+  cron.schedule("*/35 * * * *", async () => {
+    console.log("Starting craftingTweetAboutToken job...");
+    try {
+      await craftNewLaunchTweet();
+      console.log("craftingTweetAboutToken job completed successfully.");
+    } catch (error) {
+      console.error("Error in craftingTweetAboutToken job:", error);
+    }
+  });
 
   // cron.schedule("0 */6 * * *", async () => {
   //   console.log("Starting craftingTweetAboutToken job...");

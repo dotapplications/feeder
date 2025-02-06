@@ -59,7 +59,7 @@ export const chromeDB = chroma([
 // });
 
 export const personality_indexer = chromaIndexerRef({
-  collectionName: "personality_memory_shanks",
+  collectionName: "personality_memory",
 });
 export const entity_indexer = chromaIndexerRef({
   collectionName: "entity_memmory",
@@ -77,7 +77,7 @@ export const experience_indexer = chromaIndexerRef({
 // });
 
 export const personality_memory_retriver = chromaRetrieverRef({
-  collectionName: "personality_memory_shanks",
+  collectionName: "personality_memory",
 });
 export const entity_memory_retriver = chromaRetrieverRef({
   collectionName: "entity_memmory",

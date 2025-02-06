@@ -27,7 +27,7 @@ export const twitter_schema = z.object({
     z
       .string()
       .describe(
-        "if token related, trading related,latest tweet, if it is small reach (less than 10k views)"
+        "if it is an good tweet according to my personality, if it is small reach (less than 10k views)"
       )
   ),
 
@@ -38,7 +38,7 @@ export const twitter_schema = z.object({
         tweet_id: z.string(),
       })
     )
-    .describe("latest tweet, toke related, or trading related"),
+    .describe("latest tweet, and alligned to my personality"),
 
   activity_summary: z.string().describe("summary of the activity"),
   observation: z.string().describe("observations "),
@@ -166,7 +166,7 @@ export const long_tweet_schema = z.object({
   tweet_thread: z
     .string()
     .describe(
-      " should be less than 550 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
+      " should be less than 550 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want (not mandatory) ."
     ),
   activity_summary: z
     .string()
@@ -182,7 +182,7 @@ export const new_launch_token_schema = z.object({
   tweet: z
     .string()
     .describe(
-      "it should be detailed tweet, should be less than 800 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
+      "it should be formated with line sepration on content for better readabiliy, it should be detailed tweet, should be less than 300 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
     ),
   token_symbol_tweeted: z
     .string()
