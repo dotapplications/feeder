@@ -33,6 +33,7 @@ import { GenerateResponse, z } from "genkit";
 import { headline_schema } from "../schemas/headline_schema";
 import { retriveEntityMemory } from "../memory/entity_memory";
 import {
+  initital_personality,
   retrivePersonalityMemory,
   shanks_personality,
 } from "../memory/peronality_memory";
@@ -228,7 +229,7 @@ export const performLearningAndTweetAboutToken = async () => {
   const twitterFeedData = await readTwitterHomeTimeline();
   const systemPrompt =
     "you will be reading twitter feeds below and generate output based on the most important and relvent information you have read";
-  const prompt = `${twitterFeedData}`;
+  const prompt = `${twitterFeedData} by considering personality: ${initital_personality}`;
   const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
   // var docs = await retriveAllMemoriesContext(complete_prompt);
 
@@ -550,12 +551,12 @@ export const craftNewLaunchTweet = async () => {
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
   const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction (include trading matrices and analysis, or price prediction), tweet should be well formated (line spacing),  don't use hashtags, bold text, may include emojis and stickers`;
 
-  const prompt = `${grokResponse} \n consider  your personality tweeting`;
+  const prompt = `${grokResponse} \n by considering personality: ${initital_personality}`;
 
-  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
-    docs: docs,
+    // docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {
@@ -599,12 +600,12 @@ export const craftDetailedTweetAboutToken = async (tweets: string) => {
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
   const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction, tweet should be well formated,  don't use hashtags, bold text, may include emojis and stickers`;
 
-  const prompt = `${grokResponse} \n consider your personality before tweeting`;
+  const prompt = `${grokResponse} \n by considering personality: ${initital_personality}`;
 
-  var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
+  // var docs = await retriveAllMemoriesContext(systemPrompt + "\n" + prompt);
 
   var response = await ai.generate({
-    docs: docs,
+    // docs: docs,
     system: systemPrompt,
     prompt: prompt,
     output: {
