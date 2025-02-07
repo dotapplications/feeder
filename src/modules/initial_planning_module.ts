@@ -300,7 +300,7 @@ export const performLearningReply = async () => {
   const twitterFeedData = await readTwitterHomeTimeline();
   const systemPrompt =
     "you will be reading twitter feeds below and generate output based on the information you have read";
-  const prompt = `${twitterFeedData}`;
+  const prompt = `${twitterFeedData} by considering personality: ${initital_personality}`;
   const complete_prompt = `${systemPrompt}\n ${twitterFeedData}`;
   // var docs = await retriveAllMemoriesContext(complete_prompt);
 
@@ -728,7 +728,7 @@ export const replyToTweet = async (tweetId: string, tweet: string) => {
 
   console.log(grokResponse);
   const system = `create an short reply for the tweet:${tweet}, using the predictions and observations below `;
-  const prompt = `${grokResponse} \n for replying consider the personality ${shanks_personality}`;
+  const prompt = `${grokResponse} \n for replying by considering personality: ${initital_personality}`;
 
   // const docs = await retriveAllMemoriesContext(system + "\n" + prompt);
 
