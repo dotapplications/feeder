@@ -403,7 +403,41 @@ export const grokCreateNewLaunchInformation = async (tokensString: string) => {
     messages: [
       {
         role: "user",
-        content: `What the newly launched token that getting viral on x,  make observations and predictions about that token by gathering all informations (include trading matrices and analysis)) about that token
+        content: `Find a cryptocurrency token that matches the following characteristics and analyze data from the past 7 days:
+
+        ### Exclusion Criteria:
+        - Exclude presale tokens or tokens without active trading on major exchanges (e.g., Binance, Coinbase, Uniswap).
+        - Avoid tokens with no established utility or vague roadmaps.
+        
+        ### Selection Criteria:
+        1. **Market Performance**:
+           - Low to mid-market cap ($5M–$300M) with increasing trading volume and liquidity.
+           - Price showing strong support levels or breaking out of resistance zones.
+        
+        2. **Adoption & Activity**:
+           - Growing wallet activity or transaction volume on-chain.
+           - Utility in active DeFi, gaming, or real-world applications.
+        
+        3. **Catalysts**:
+           - Recent announcements (e.g., new partnerships, exchange listings, or token burns).
+           - Upcoming events like mainnet launches or staking incentives.
+        
+        4. **Community Sentiment**:
+           - Positive and growing mentions on social media (Twitter, Reddit, Telegram).
+        
+        ### Output:
+        Provide details on the **best-matching** token, including:
+        
+        - **Token Name and Exact Ticker Symbol** (e.g., Ethereum, ETH).
+        - **Observations**: 
+          - Current price, market cap, trading volume, and recent price movements.
+          - Notable trends in wallet activity and on-chain transactions.
+          - Social media sentiment analysis over the past 7 days.
+          
+        - **Predictions**:
+          - Expected short-term price movement based on technical analysis.
+          - Potential impact of upcoming catalysts on price and adoption.
+          - Possible risks or challenges that could affect growth.
 
         exclude the tokens ${tokensString}`,
       },
