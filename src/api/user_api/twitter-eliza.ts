@@ -9,6 +9,7 @@ import {
   fetchLastFetchedDateTime,
   storeLastFetchedDateTime,
 } from "./questions_firebase";
+import { ensureTwoLineBreaks } from "../../utils";
 
 dotenv.config();
 
@@ -282,7 +283,8 @@ export const replyToTweetAPI = async (tweetId: string, reply_tweet: string) => {
   }
 
   try {
-    const response = await scraper.sendTweet(reply_tweet, tweetId);
+    const updated_reply = ensureTwoLineBreaks(reply_tweet);
+    const response = await scraper.sendTweet(updated_reply, tweetId);
     console.log(response);
   } catch (error) {
     console.error("Error sending tweet:", error);

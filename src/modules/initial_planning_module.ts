@@ -741,7 +741,7 @@ export const replyToTweet = async (tweetId: string, tweet: string) => {
         reply: z
           .string()
           .describe(
-            "very few content, should be less than 80 characters, don't use hashtags,"
+            "very few content, should be less than 100 characters, don't use hashtags,"
           ),
         activity_summary: z.string().describe("summary of the activity"),
       }),
