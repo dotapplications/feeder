@@ -549,7 +549,7 @@ export const craftNewLaunchTweet = async () => {
   //   "You are creating an tweet about your prediction and observervation"
   // );
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
-  const systemPrompt = `You will be creating tweet with following content use $ symbol before token symbol, `;
+  const systemPrompt = `You will be creating tweet with following content use $ symbol before token symbol, (only use symbol, don't need to mention name of the token) `;
 
   const prompt = `${grokResponse} \n by considering personality: ${initital_personality}`;
 
