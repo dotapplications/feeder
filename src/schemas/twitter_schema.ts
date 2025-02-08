@@ -182,7 +182,7 @@ export const new_launch_token_schema = z.object({
   tweet: z
     .string()
     .describe(
-      "it should be formated with line sepration on content for better readabiliy, it should be detailed tweet, should be less than 300 charcters, dont't use hashtags,  it should be formated with line sepration on content for better readabiliy.  you can use emojis if you want to express your feelings."
+      " it should be detailed tweet, should be less than 500 charcters, dont't use hashtags,"
     ),
   token_symbol_tweeted: z
     .string()

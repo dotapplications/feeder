@@ -290,6 +290,17 @@ const chat_with_feeder_terminal = async () => {
 // planningModule.initialize();
 
 scheduleJobs();
+// craftNewLaunchTweet();
+
+// function ensureTwoLineBreaks(sentence: string): string {
+//   return sentence.replace(/(\.) *(\n?)/g, (match, dot, newline) => {
+//     return dot + (newline === "\n" ? "\n\n" : "\n\n");
+//   });
+// }
+
+// // Example usage
+// const text = "This is a sentence.\nThis is another sentence. And another.";
+// console.log(ensureTwoLineBreaks(text));
 // performLearningReply();
 // clearNewLaunchTokens();
 // myTweetsGather();

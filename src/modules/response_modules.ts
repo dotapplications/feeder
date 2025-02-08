@@ -12,6 +12,7 @@ import { retweetTweet } from "../api/user_api/twitter-eliza";
 import { likeTweet } from "../api/user_api/twitter-eliza";
 import { createQuestion } from "./initial_planning_module";
 import { storeQuestionIntoDB } from "../api/user_api/questions_firebase";
+import { ensureTwoLineBreaks } from "../utils";
 
 interface TokenToTrack {
   token_symbol: string;
@@ -91,8 +92,10 @@ export const handleAgentResponse = async (response: GenerateResponse<any>) => {
             case "tweet":
               // Handle tweet
               console.log("Creating tweet:", output[key]);
-              const tweet = `${output[key]}`;
-              await sentLongTweet(tweet);
+
+              var updatedTweet = ensureTwoLineBreaks(output[key]);
+
+              await sentLongTweet(updatedTweet);
 
               break;
             case "narratives_to_track":

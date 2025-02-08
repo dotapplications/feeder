@@ -21,6 +21,12 @@ export const toolDefinisitionsStringified = () => {
   return result;
 };
 
+export function ensureTwoLineBreaks(sentence: string): string {
+  return sentence.replace(/(\. )([^\n])/g, (match, dotSpace, nextChar) => {
+    return dotSpace + "\n\n" + nextChar;
+  });
+}
+
 export const capabilitiesInreadableFormat = () => {
   const string_capabilities = capabilities
     .map((capability) => {

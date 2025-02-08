@@ -549,7 +549,7 @@ export const craftNewLaunchTweet = async () => {
   //   "You are creating an tweet about your prediction and observervation"
   // );
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
-  const systemPrompt = `You will be creating tweet with following content (include more data) use $ symbol before token symbol, and content should have line breaks for readability, `;
+  const systemPrompt = `You will be creating tweet with following content use $ symbol before token symbol, `;
 
   const prompt = `${grokResponse} \n by considering personality: ${initital_personality}`;
 
@@ -727,7 +727,7 @@ export const replyToTweet = async (tweetId: string, tweet: string) => {
   const grokResponse = await generateReplyToTweetGrok(tweet);
 
   console.log(grokResponse);
-  const system = `create an short reply for the tweet:${tweet}, using the predictions and observations below `;
+  const system = `create an short reply for the tweet:${tweet}, using content below `;
   const prompt = `${grokResponse} \n for replying by considering personality: ${initital_personality}`;
 
   // const docs = await retriveAllMemoriesContext(system + "\n" + prompt);
@@ -741,7 +741,7 @@ export const replyToTweet = async (tweetId: string, tweet: string) => {
         reply: z
           .string()
           .describe(
-            "very few content, should be less than 120 characters, don't use hashtags, and well formated, split contents as lines"
+            "very few content, should be less than 80 characters, don't use hashtags,"
           ),
         activity_summary: z.string().describe("summary of the activity"),
       }),
