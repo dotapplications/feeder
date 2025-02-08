@@ -799,15 +799,15 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/35 * * * *", async () => {
-    console.log("Starting craftingTweetAboutToken job...");
-    try {
-      await performLearningAndTweetAboutToken();
-      console.log("craftingTweetAboutToken job completed successfully.");
-    } catch (error) {
-      console.error("Error in craftingTweetAboutToken job:", error);
-    }
-  });
+  // cron.schedule("*/35 * * * *", async () => {
+  //   console.log("Starting craftingTweetAboutToken job...");
+  //   try {
+  //     await performLearningAndTweetAboutToken();
+  //     console.log("craftingTweetAboutToken job completed successfully.");
+  //   } catch (error) {
+  //     console.error("Error in craftingTweetAboutToken job:", error);
+  //   }
+  // });
 
   // cron.schedule("*/15 * * * *", async () => {
   //   console.log("Starting craftingTweetAboutToken job...");
