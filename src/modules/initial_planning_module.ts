@@ -549,7 +549,7 @@ export const craftNewLaunchTweet = async () => {
   //   "You are creating an tweet about your prediction and observervation"
   // );
   // console.log(personalityMemoryDoc.map((e) => console.log(e.content)));
-  const systemPrompt = `You will be creating tweet regarding the predictions with relevent data or observation to back the prediction (include trading matrices and analysis, or price prediction), tweet should be well formated (line spacing),  don't use hashtags, bold text, may include emojis and stickers`;
+  const systemPrompt = `You will be creating tweet with following content`;
 
   const prompt = `${grokResponse} \n by considering personality: ${initital_personality}`;
 
