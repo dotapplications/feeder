@@ -819,7 +819,7 @@ export const scheduleJobs = async () => {
   //   }
   // });
 
-  cron.schedule("*/35 * * * *", async () => {
+  cron.schedule("*/45 * * * *", async () => {
     console.log("Starting craftingTweetAboutToken job...");
     try {
       await craftNewLaunchTweet();
